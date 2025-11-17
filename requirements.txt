@@ -1,2 +1,6 @@
 streamlit
 neo4j
+requests
+plotly
+pandas
+python-dotenv
