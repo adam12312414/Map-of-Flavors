@@ -48,6 +48,28 @@ elif page == "📊 Map of Flavors Dashboard":
     st.markdown("""
     Discover ingredient trends, cuisine relationships, and brand associations using our live NeoDash visualization.
     """)
+
+    # 🔑 Show connection details for users to copy-paste
+    st.markdown("""
+    ### 🔐 NeoDash Login Details  
+    Please copy and paste the details below when NeoDash asks you to log in:
+
+    **Protocol:**  
+    `neo4j+s`
+
+    **Hostname:**  
+    `985a5cea.databases.neo4j.io`
+
+    **Port**
+    7687
+
+    **Password:**  
+    `hx16lNc8kwMK5KEUYraRvCTpmmA8g9rKl6toAatnNgw`
+
+    _(These credentials are read-only and safe for Open House use.)_
+    """)
+
+    # 🚀 Load the NeoDash dashboard
     neodash_url = "https://neodash.graphapp.io/?dbms=neo4j+s://985a5cea.databases.neo4j.io&user=neo4j"
     iframe(neodash_url, height=850, scrolling=True)
 
