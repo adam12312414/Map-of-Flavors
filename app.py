@@ -48,13 +48,13 @@ elif page == "📊 Map of Flavors Dashboard":
     st.markdown("""
     Discover ingredient trends, cuisine relationships, and brand associations using our live NeoDash visualization.
     """)
-    st.info("""
-    🔐 **Dashboard Login (for viewers):**  
-    Use the following guest account to view the NeoDash dashboard:
+    st.markdown("### 🔐 Dashboard Login (for viewers)")
 
-    👤 **Hostname:** 985a5cea.databases.neo4j.io  
-    🔑 **Password:** hx16lNc8kwMK5KEUYraRvCTpmmA8g9rKl6toAatnNgw
-    """)
+    st.markdown("👤 **Hostname:**")
+    st.code("985a5cea.databases.neo4j.io", language=None)
+
+    st.markdown("🔑 **Password:**")
+    st.code("hx16lNc8kwMK5KEUYraRvCTpmmA8g9rKl6toAatnNgw", language=None)
     
     neodash_url = "https://neodash.graphapp.io/?database=neo4j+s://985a5cea.databases.neo4j.io&dashboard=Map%20of%20Flavors&embed=true"
     iframe(neodash_url, height=850, scrolling=True)
@@ -62,6 +62,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
