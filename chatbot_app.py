@@ -35,6 +35,15 @@ def main():
     (Dish)-[:USES]->(Ingredient)
     (Ingredient)-[:ASSOCIATED_WITH]->(Brand)
 
+    ⚠️ Neo4j Version Rule:
+    - You MUST use Neo4j 5 syntax.
+    - NEVER use size() on a pattern.
+    - To count pattern matches, ALWAYS use:
+    COUNT { (pattern) }
+
+    Example:
+    COUNT { (d:Dish)-[:USES]->(i) } AS usesCount
+
     🧩 Data Properties:
     - `Ingredient` nodes have a Boolean property `study_food` which is **true** for ingredients that help with studying (focus, memory, or energy).  
     - Use this property to find brain-boosting or study-enhancing ingredients.  
@@ -299,3 +308,4 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
