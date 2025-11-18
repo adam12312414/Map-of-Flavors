@@ -44,6 +44,17 @@ def main():
     Example:
     COUNT { (d:Dish)-[:USES]->(i) } AS usesCount
 
+    ⚠️ PERFORMANCE RULES (Neo4j Aura Free Tier):
+    - NEVER scan the whole graph.
+    - ALWAYS start with the most selective node first (e.g., Ingredient or Cuisine).
+    - ALWAYS include LIMIT (10 or fewer) in queries.
+    - NEVER do long pattern matching like:
+      (r:Region)-[:HAS_CUISINE]->(:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i)
+    - Use COUNT {} instead of size().
+    - For study foods, start with Ingredient nodes first:
+      MATCH (i:Ingredient {study_food:true}) ...
+    - When unsure, choose the simpler query.
+
     🧩 Data Properties:
     - `Ingredient` nodes have a Boolean property `study_food` which is **true** for ingredients that help with studying (focus, memory, or energy).  
     - Use this property to find brain-boosting or study-enhancing ingredients.  
@@ -308,4 +319,5 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
