@@ -229,7 +229,7 @@ def main():
     if question:
         # 1. If the question comes from button JSON, skip GPT ---
         try:
-            preset = json.loads(question)   # If this works, it's from a button
+            preset = json.loads(question)
             if "cypher" in preset:
                 cypher_query = preset["cypher"]
                 chart_type = preset.get("chart", "table")
@@ -385,6 +385,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
