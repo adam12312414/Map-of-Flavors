@@ -181,7 +181,7 @@ def main():
     question = None
     if col1.button("🧠 Top Study Foods"): question = "Which study ingredients has the highest occurence in the data?"
     if col2.button("🍽️ Study Cuisines"): question = "Which cuisines have the most brain-boosting ingredients?"
-    if col3.button("🌍 Study Regions"): question = "Which regions use the most study-enhancing ingredients?
+    if col3.button("🌍 Study Regions"): question = "Which regions use the most study-enhancing ingredients?"
 
     user_question = st.text_input("Ask a question here:")
     if question is None and user_question: question = user_question
@@ -319,6 +319,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
