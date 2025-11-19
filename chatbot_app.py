@@ -179,15 +179,81 @@ def main():
     st.subheader("Try these study-boosting ideas! 👇")
     col1, col2, col3 = st.columns(3)
     question = None
-    if col1.button("🧠 Top Study Foods"): question = "Which study ingredients has the highest occurence in the data?"
-    if col2.button("🍽️ Study Cuisines"): question = "Which cuisines have the most brain-boosting ingredients?"
-    if col3.button("🌍 Study Regions"): question = "Which regions use the most study-enhancing ingredients?"
+    if col1.button("🧠 Top Study Foods"):
+        question = json.dumps({
+            "cypher": """
+            MATCH (i:Ingredient)
+            WHERE i.study_food = true
+            WITH i
+            MATCH (:Dish)-[:USES]->(i)
+            RETURN i.name AS Ingredient, COUNT(*) AS Uses
+            ORDER BY Uses DESC
+            LIMIT 10
+            """,
+            "chart": "bar"
+        })
+    
+    if col2.button("🍽️ Study Cuisines"):
+        question = json.dumps({
+            "cypher": """
+            MATCH (i:Ingredient)
+            WHERE i.study_food = true
+            WITH i
+            MATCH (c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i)
+            RETURN c.name AS Cuisine, COUNT(DISTINCT i.name) AS StudyIngredientCount
+            ORDER BY StudyIngredientCount DESC
+            LIMIT 5
+            """,
+            "chart": "bar"
+        })
+    
+    if col3.button("🌍 Study Regions"):
+        question = json.dumps({
+            "cypher": """
+            MATCH (i:Ingredient)
+            WHERE i.study_food = true
+            WITH i
+            MATCH (c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i)
+            MATCH (r:Region)-[:HAS_CUISINE]->(c)
+            RETURN r.name AS Region, COUNT(DISTINCT i.name) AS StudyIngredientCount
+            ORDER BY StudyIngredientCount DESC
+            LIMIT 5
+            """,
+            "chart": "bar"
+        })
 
     user_question = st.text_input("Ask a question here:")
     if question is None and user_question: question = user_question
 
     # === Main Logic ===
     if question:
+        # 1. If the question comes from button JSON, skip GPT ---
+        try:
+            preset = json.loads(question)   # If this works, it's from a button
+            if "cypher" in preset:
+                cypher_query = preset["cypher"]
+                chart_type = preset.get("chart", "table")
+
+                st.code(cypher_query, language="cypher")
+                results = run_query(cypher_query)
+
+                if results:
+                    df = pd.DataFrame(results)
+                    if chart_type == "bar" and len(df.columns) >= 2:
+                        fig = px.bar(df, x=df.columns[0], y=df.columns[1], color=df.columns[0])
+                        st.plotly_chart(fig, use_container_width=True)
+                    elif chart_type == "pie":
+                        fig = px.pie(df, names=df.columns[0], values=df.columns[1])
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.table(df)
+                else:
+                    st.warning("No matching data found.")
+
+                st.stop()
+        except:
+            pass 
+            
         bot_name = "Cook-E 👨‍🍳🍪"
         messages = [
             f"{bot_name}: Stirring up some tasty insights just for you... 🍲",
@@ -319,6 +385,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
