@@ -179,9 +179,48 @@ def main():
     st.subheader("Try these study-boosting ideas! 👇")
     col1, col2, col3 = st.columns(3)
     question = None
-    if col1.button("🧠 Top Study Foods"): question = "Which study ingredients has the highest occurence in the data?"
-    if col2.button("🍽️ Study Cuisines"): question = "Which cuisines have the most brain-boosting ingredients?"
-    if col3.button("🌍 Study Regions"): question = "Which regions use the most study-enhancing ingredients?"
+    if col1.button("🧠 Top Study Foods"):
+        question = json.dumps({
+            "cypher": """
+            MATCH (i:Ingredient)
+            WHERE i.study_food = true
+            WITH i
+            MATCH (:Dish)-[:USES]->(i)
+            RETURN i.name AS Ingredient, COUNT(*) AS Uses
+            ORDER BY Uses DESC
+            LIMIT 10
+            """,
+            "chart": "bar"
+        })
+    
+    if col2.button("🍽️ Study Cuisines"):
+        question = json.dumps({
+            "cypher": """
+            MATCH (i:Ingredient)
+            WHERE i.study_food = true
+            WITH i
+            MATCH (c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i)
+            RETURN c.name AS Cuisine, COUNT(DISTINCT i.name) AS StudyIngredientCount
+            ORDER BY StudyIngredientCount DESC
+            LIMIT 5
+            """,
+            "chart": "bar"
+        })
+    
+    if col3.button("🌍 Study Regions"):
+        question = json.dumps({
+            "cypher": """
+            MATCH (i:Ingredient)
+            WHERE i.study_food = true
+            WITH i
+            MATCH (c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i)
+            MATCH (r:Region)-[:HAS_CUISINE]->(c)
+            RETURN r.name AS Region, COUNT(DISTINCT i.name) AS StudyIngredientCount
+            ORDER BY StudyIngredientCount DESC
+            LIMIT 5
+            """,
+            "chart": "bar"
+        })
 
     user_question = st.text_input("Ask a question here:")
     if question is None and user_question: question = user_question
@@ -319,6 +358,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
