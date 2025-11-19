@@ -1,9 +1,4 @@
 import streamlit as st
-st.set_page_config(
-    page_title="Cook-E's Map of Flavors 🍪",
-    page_icon="🍪",
-    layout="centered"
-)
 import pandas as pd
 import json
 import plotly.express as px
@@ -440,6 +435,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
