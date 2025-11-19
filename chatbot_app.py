@@ -77,6 +77,56 @@ def main():
     - Keep responses short and fun (2–4 sentences). Don’t sound like a report.
     - Never make up data — base everything on the Neo4j dataset only.
 
+    🌍 REGION NORMALIZATION RULE:
+    Users may type regions like “Asian”, “European”, “African”, “North American”, etc.
+    But in the Neo4j graph, Region names are stored as CONTINENTS only:
+
+    - "asia"
+    - "europe"
+    - "africa"
+    - "north america"
+    - "south america"
+
+    Therefore:
+    - If user says “Asian”, interpret it as Region = "asia"
+    - If user says “European”, interpret it as Region = "europe"
+    - If user says “African”, interpret it as "africa"
+    - If user says “North American”, interpret it as "north america"
+    - If user says “South American”, interpret it as "south america"
+
+    You MUST convert all these adjectives into the matching continent before writing the Cypher query.
+
+    Example:
+    User: “Which Asian cuisine uses the most brain-boosting ingredients?”
+    Correct Cypher:
+    MATCH (r:Region)-[:HAS_CUISINE]->(c:Cuisine)
+    WHERE toLower(r.name) = 'asia'
+    ...
+
+    When the user asks about:
+    - “which cuisine uses the most study-boosting ingredients”
+    - “top cuisines/regions with study-friendly ingredients”
+    - “which dishes/cuisines have the most study_food ingredients”
+    - any question involving ranking based on study_food
+
+    ALWAYS count DISTINCT study_food ingredients per cuisine (or region/dish).
+
+    USE THIS PATTERN:
+
+    MATCH (c:Cuisine)-[:HAS_DISH]->(d:Dish)-[:USES]->(i:Ingredient)
+    WHERE i.study_food = true
+    WITH c, COLLECT(DISTINCT i.name) AS studyIngredients
+    RETURN c.name AS Cuisine,
+        SIZE(studyIngredients) AS StudyIngredientCount
+    ORDER BY StudyIngredientCount DESC
+    LIMIT 10
+
+    NEVER use:
+    COUNT { (d)-[:USES]->(i) }
+
+    NEVER count per-dish occurrences.
+    ALWAYS count unique ingredients across all dishes in that cuisine.
+
     🧠 Response Types:
     If the user wants numbers, comparisons, or trends:
     {
@@ -385,6 +435,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
