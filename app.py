@@ -93,11 +93,15 @@ elif page == "📊 Map of Flavors Dashboard":
         if kpi_res:
             kpi = kpi_res[0]
             col1, col2, col3, col4 = st.columns(4)
-            col1.metric("🌎 Total Cuisines", kpi["cuisines"])
-            col2.metric("🍽️ Total Dishes", kpi["dishes"])
-            col3.metric("🥗 Total Ingredients", kpi["ingredients"])
-            percent_study = round(kpi["study_ingredients"] * 100.0 / kpi["ingredients"], 1) if kpi["ingredients"] else 0
-            col4.metric("🧠 Study-Food Ingredients", f'{kpi["study_ingredients"]} ({percent_study}%)')
+
+            # move the emoji into the value (NeoDash style)
+            col1.metric("Total Cuisines", f"🌎 {kpi['cuisines']}")
+            col2.metric("Total Dishes", f"🍽️ {kpi['dishes']}")
+            col3.metric("Total Ingredients", f"🥗 {kpi['ingredients']}")
+
+            percent_study = round(kpi["study_ingredients"] * 100.0 / kpi["ingredients"], 1)
+
+            col4.metric("Study-Food Ingredients", f"🧠 {kpi['study_ingredients']} ({percent_study}%)")
 
         st.markdown("---")
 
@@ -495,6 +499,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
