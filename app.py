@@ -60,7 +60,8 @@ elif page == "📊 Map of Flavors Dashboard":
     st.markdown("""
     <style>
     @media (max-width: 600px) {
-        iframe {
+        /* Streamlit wraps iframes inside .element-container iframe */
+        .element-container iframe {
             width: 100% !important;
             max-width: 100% !important;
             transform: scale(0.90);
@@ -77,6 +78,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
