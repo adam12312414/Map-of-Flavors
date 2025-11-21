@@ -73,13 +73,11 @@ elif page == "📊 Map of Flavors Dashboard":
     # 📱 SIMPLE STREAMLIT DASHBOARD (MOBILE-FRIENDLY)
     # =========================
     if view_mode == "📱 Simple mobile-friendly dashboard":
-
-        # 1️⃣ Header-style summary (matches top of NeoDash)
-        st.subheader("🍜 Map of Flavors (Carte des Saveurs)")
-        st.caption("Connecting the World Through Ingredients 🌍")
-
-        # 2️⃣ 🌍 Global Dataset Summary
+        # -----------------------------
+        # 🌍 Global Dataset Summary
+        # -----------------------------
         st.subheader("🌍 Global Dataset Summary")
+
         kpi_query = """
         MATCH (c:Cuisine)
         WITH count(c) AS cuisines
@@ -94,44 +92,37 @@ elif page == "📊 Map of Flavors Dashboard":
         kpi_res = run_query(kpi_query)
         if kpi_res:
             kpi = kpi_res[0]
-            percent_study = (
-                round(100 * kpi["study_ingredients"] / kpi["ingredients"], 1)
-                if kpi["ingredients"] else 0
-            )
-
-            col1, col2 = st.columns(2)
-            col3, col4 = st.columns(2)
-            col1.metric("Total_Cuisines", kpi["cuisines"])
-            col2.metric("Total_Dishes", kpi["dishes"])
-            col3.metric("Total_Ingredients", kpi["ingredients"])
-            col4.metric("Total_Study_Foods", f'{kpi["study_ingredients"]} ({percent_study}%)')
+            col1, col2, col3, col4 = st.columns(4)
+            col1.metric("🌎 Total Cuisines", kpi["cuisines"])
+            col2.metric("🍽️ Total Dishes", kpi["dishes"])
+            col3.metric("🥗 Total Ingredients", kpi["ingredients"])
+            percent_study = round(kpi["study_ingredients"] * 100.0 / kpi["ingredients"], 1) if kpi["ingredients"] else 0
+            col4.metric("🧠 Study-Food Ingredients", f'{kpi["study_ingredients"]} ({percent_study}%)')
 
         st.markdown("---")
 
-        # 3️⃣ 🧠🍳Top 10 Ingredients That Help You Study Better
-        st.subheader("🧠🍳Top 10 Ingredients That Help You Study Better")
+        # -----------------------------
+        # 🧠 Top 10 Ingredients, Regions, Cuisines, Dishes
+        # -----------------------------
+        st.subheader("🧠🔍 Top 10 Ingredients")
+
         q_ingredients = """
         MATCH (i:Ingredient)
         WHERE i.study_food = true
         MATCH (:Dish)-[:USES]->(i)
-        RETURN i.name AS Ingredient, COUNT(*) AS Frequency
-        ORDER BY Frequency DESC
+        RETURN i.name AS Ingredient, COUNT(*) AS Uses
+        ORDER BY Uses DESC
         LIMIT 10
         """
         df_ing = pd.DataFrame(run_query(q_ingredients))
         if not df_ing.empty:
-            fig = px.bar(
-                df_ing,
-                x="Ingredient",
-                y="Frequency",
-                title="Top 10 Study-Friendly Ingredients"
-            )
+            fig = px.bar(df_ing, x="Ingredient", y="Uses", title="Top 10 Brain-Boosting Ingredients")
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("No study ingredients found in the data.")
 
-        # 4️⃣ 🗺️🥬 Regions Full of Focus-Enhancing Dishes!
-        st.subheader("🗺️🥬 Regions Full of Focus-Enhancing Dishes!")
+        # 🌍 Regions with most study ingredients
+        st.subheader("📗🍃 Regions Full of Focus-Enhancing Foods")
         q_regions = """
         MATCH (r:Region)-[:HAS_CUISINE]->(c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i:Ingredient)
         WHERE i.study_food = true
@@ -140,18 +131,14 @@ elif page == "📊 Map of Flavors Dashboard":
         """
         df_reg = pd.DataFrame(run_query(q_regions))
         if not df_reg.empty:
-            fig = px.pie(
-                df_reg,
-                names="Region",
-                values="TotalStudyFoods",
-                title="Regions Full of Focus-Enhancing Dishes!"
-            )
+            fig = px.pie(df_reg, names="Region", values="TotalStudyFoods",
+                         title="Regions Full of Focus-Enhancing Foods")
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("No region data found.")
 
-        # 5️⃣ 🍱🌍 Cuisines Packed With Brain-Boosting Foods!
-        st.subheader("🍱🌍 Cuisines Packed With Brain-Boosting Foods!")
+        # 🍜 Cuisines packed with study foods
+        st.subheader("📚🌍 Cuisines Packed with Study Foods")
         q_cuisines = """
         MATCH (c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i:Ingredient)
         WHERE i.study_food = true
@@ -161,18 +148,12 @@ elif page == "📊 Map of Flavors Dashboard":
         """
         df_cui = pd.DataFrame(run_query(q_cuisines))
         if not df_cui.empty:
-            fig = px.bar(
-                df_cui,
-                x="Cuisine",
-                y="StudyFoods",
-                title="Cuisines Packed With Brain-Boosting Foods"
-            )
+            fig = px.bar(df_cui, x="Cuisine", y="StudyFoods",
+                         title="Cuisines Packed with Focus-Boosting Ingredients")
             st.plotly_chart(fig, use_container_width=True)
 
-        st.markdown("---")
-
-        # 6️⃣ 🧠🥗 Top Dishes Packed With Study-Boosting Ingredients
-        st.subheader("🧠🥗 Top Dishes Packed With Study-Boosting Ingredients")
+        # 🍽️ Top dishes packed with study ingredients
+        st.subheader("🧠🍲 Top Dishes Packed With Study-Boosting Ingredients")
         q_dishes = """
         MATCH (d:Dish)-[:USES]->(i:Ingredient)
         WHERE i.study_food = true
@@ -188,28 +169,15 @@ elif page == "📊 Map of Flavors Dashboard":
 
         st.markdown("---")
 
-        # 7️⃣ 🤔 Flavor Fun Facts
-        st.subheader("🤔 Flavor Fun Facts")
-        st.markdown(
-            "- 🥚 **Eggs** contain choline, which helps brain cells communicate more efficiently — perfect before exams!\n"
-            "- 🫐 **Blueberries** are rich in antioxidants that support memory and learning."
-        )
+        # ===================================
+        # 🧂 INGREDIENT SECTION (matches NeoDash order)
+        # ===================================
+        st.subheader("Pick Your Fav Ingredients 💥 🧂")
+        st.caption("Choose your favourite brain-boosting ingredients:")
 
-        # 8️⃣ 🍽️ Flavor Fun Facts (second card)
-        st.subheader("🍽️ Flavor Fun Facts")
-        st.markdown(
-            "- 🥜 A handful of **nuts** a day may improve focus and memory over time.\n"
-            "- 🫖 **Green tea** offers gentle caffeine plus L-theanine to keep you calm *and* alert."
-        )
-
-        st.markdown("---")
-
-        # 9️⃣ 🥦 Ingredient Explorer (comes BEFORE cuisine explorer now)
-        st.subheader("Pick Your Fav Ingredients 💥🧂")
-
+        # === Ingredient list: ALL ingredients (not just study_food)
         ing_list_q = """
         MATCH (i:Ingredient)
-        WHERE i.study_food = true
         RETURN DISTINCT i.name AS Ingredient
         ORDER BY Ingredient
         """
@@ -217,105 +185,127 @@ elif page == "📊 Map of Flavors Dashboard":
         ing_options = df_ing_list["Ingredient"].tolist() if not df_ing_list.empty else []
 
         selected_ingredients = st.multiselect(
-            "Choose your favourite brain-boosting ingredients:",
+            "Start typing to search ingredients:",
             ing_options
         )
 
         if selected_ingredients:
-            # ⭐📊 Ingredient Summary Dashboard
+            # ⭐📊 Ingredient Summary Dashboard (correct KPI logic)
             st.subheader("⭐📊 Ingredient Summary Dashboard")
-    
-            rows = []
-            for ing in selected_ingredients:
-                q_ing_stats = """
-                MATCH (i:Ingredient {name:$ing})<-[:USES]-(d:Dish)
-                OPTIONAL MATCH (d)<-[:HAS_DISH]-(c:Cuisine)
-                OPTIONAL MATCH (c)<-[:HAS_CUISINE]-(r:Region)
-                RETURN
-                  COUNT(DISTINCT d) AS Dishes,
-                  COUNT(DISTINCT c) AS Cuisines,
-                  COUNT(DISTINCT r) AS Regions
-                """
-                res = run_query(q_ing_stats, {"ing": ing})
-                if res:
-                    stats = res[0]
-                    rows.append({
-                        "Selected_Ingredient": ing,
-                        "Total_Dishes": stats["Dishes"],
-                        "Total_Cuisines": stats["Cuisines"],
-                        "Total_Regions": stats["Regions"],
-                    })
-            if rows:
-                df_ing_stats = pd.DataFrame(rows)
+
+            q_ing_summary = """
+            WITH $ingredients AS selectedIngredients
+
+            // Step 1: Get ingredient nodes
+            MATCH (i:Ingredient)
+            WHERE i.name IN selectedIngredients
+            WITH collect(i) AS ing_list, selectedIngredients AS ing_names
+
+            // Step 2: Count cuisines using these ingredients
+            MATCH (c:Cuisine)-[:HAS_DISH]->(d:Dish)-[:USES]->(i:Ingredient)
+            WHERE i IN ing_list
+            WITH ing_list, ing_names, count(DISTINCT c) AS total_cuisines
+
+            // Step 3: Count dishes using ingredients
+            MATCH (d:Dish)-[:USES]->(i:Ingredient)
+            WHERE i IN ing_list
+            WITH ing_list, ing_names, total_cuisines,
+                 count(DISTINCT d) AS total_dishes
+
+            // Step 4: Percent study ingredients
+            WITH ing_list, ing_names, total_cuisines, total_dishes,
+                 size(ing_list) AS total_selected,
+                 size([x IN ing_list WHERE x.study_food = true]) AS total_study_foods
+
+            RETURN
+              ing_names AS Selected_Ingredients,
+              total_cuisines AS Total_Cuisines,
+              total_dishes AS Total_Dishes,
+              CASE WHEN total_selected = 0
+                   THEN 0.0
+                   ELSE ROUND((total_study_foods * 100.0 / total_selected), 1)
+              END AS Percent_Study_Ingredients
+            """
+            df_ing_stats = pd.DataFrame(run_query(q_ing_summary, {"ingredients": selected_ingredients}))
+            if not df_ing_stats.empty:
+                # Turn ingredient list into a nice string
+                df_ing_stats["Selected_Ingredients"] = df_ing_stats["Selected_Ingredients"].apply(
+                    lambda lst: ", ".join(lst)
+                )
                 st.table(df_ing_stats)
-    
+
             # 😋🔥 Which Cuisines Love Your Ingredients?
             st.subheader("😋🔥 Which Cuisines Love Your Ingredients?")
             q_ing_cui = """
-            MATCH (i:Ingredient)<-[:USES]-(:Dish)<-[:HAS_DISH]-(c:Cuisine)
-            WHERE i.name IN $ings
-            RETURN c.name AS Cuisine, i.name AS Ingredient, COUNT(*) AS Uses
-            ORDER BY Uses DESC
+            WITH $ingredients AS ingredients
+
+            MATCH (i:Ingredient)
+            WHERE i.name IN ingredients
+
+            MATCH (c:Cuisine)-[:HAS_DISH]->(d:Dish)-[:USES]->(i)
+            RETURN c.name AS Cuisine,
+                   COUNT(*) AS ingredient_usage
+            ORDER BY ingredient_usage DESC
             """
-            df_ing_cui = pd.DataFrame(run_query(q_ing_cui, {"ings": selected_ingredients}))
+            df_ing_cui = pd.DataFrame(run_query(q_ing_cui, {"ingredients": selected_ingredients}))
             if not df_ing_cui.empty:
                 fig = px.bar(
                     df_ing_cui,
                     x="Cuisine",
-                    y="Uses",
-                    color="Ingredient",
-                    barmode="group",
+                    y="ingredient_usage",
                     title="Which Cuisines Love Your Ingredients?"
                 )
+                fig.update_layout(xaxis_title="Cuisine", yaxis_title="Uses")
                 st.plotly_chart(fig, use_container_width=True)
-    
-        # --- NETWORK GRAPH SECTION (always visible after ingredient analysis) ---
-        st.markdown("---")
-        st.subheader("🕸️ Flavor Network – Click to Explore")
-    
-        selected_ingredients_net = st.multiselect(
-            "Pick ingredients to visualize their connections:",
-            ing_options
-        )
-    
-        if selected_ingredients_net:
+
+            # 🕸️ Ingredient Spider-Web (network graph)
+            st.subheader("🕸️ Ingredient Spider-Web of Flavors")
+
             q_net = """
             MATCH (i:Ingredient)<-[:USES]-(d:Dish)<-[:HAS_DISH]-(c:Cuisine)
             WHERE i.name IN $ingredients
+            WITH i, d, c
+            ORDER BY rand()
+            LIMIT 80
             RETURN i.name AS Ingredient, d.name AS Dish, c.name AS Cuisine
             """
-            data_net = run_query(q_net, {"ingredients": selected_ingredients_net})
-            df_net = pd.DataFrame(data_net)
-    
+            df_net = pd.DataFrame(run_query(q_net, {"ingredients": selected_ingredients}))
+
             if not df_net.empty:
-                net = Network(height="600px", width="100%", bgcolor="#0e1117", font_color="white")
+                net = Network(
+                    height="600px",
+                    width="100%",
+                    bgcolor="#0e1117",
+                    font_color="white"
+                )
                 net.force_atlas_2based()
-    
+
                 for _, row in df_net.iterrows():
                     ing = row["Ingredient"]
                     dish = row["Dish"]
                     cui = row["Cuisine"]
-    
-                    net.add_node(ing, label=ing, color="#80ffdb")
-                    net.add_node(dish, label=dish, color="#5e60ce")
-                    net.add_node(cui, label=cui, color="#64dfdf")
-    
+
+                    net.add_node(ing, label=ing, color="#80ffdb", shape="dot")
+                    net.add_node(dish, label=dish, color="#5e60ce", shape="dot")
+                    net.add_node(cui, label=cui, color="#64dfdf", shape="dot")
+
                     net.add_edge(ing, dish)
                     net.add_edge(dish, cui)
-    
-                net.save_graph("network_graph.html")
-                with open("network_graph.html", "r", encoding="utf-8") as f:
+
+                net.save_graph("ingredient_network.html")
+                with open("ingredient_network.html", "r", encoding="utf-8") as f:
                     html_graph = f.read()
-    
                 components.html(html_graph, height=600, scrolling=True)
             else:
                 st.info("No network connections found for the selected ingredients.")
-    
-    
-        # 🔟 Cuisine Explorer (MUST be outside ingredient selection)
+
         st.markdown("---")
+
+        # ===================================
+        # 😋 CUISINE SECTION (matches NeoDash order)
+        # ===================================
         st.subheader("Where Shall We Eat Today? 😋")
-    
+
         cuisine_list_q = """
         MATCH (c:Cuisine)
         RETURN DISTINCT c.name AS cuisine
@@ -323,41 +313,51 @@ elif page == "📊 Map of Flavors Dashboard":
         """
         df_c_list = pd.DataFrame(run_query(cuisine_list_q))
         cuisine_options = df_c_list["cuisine"].tolist() if not df_c_list.empty else []
-    
+
         selected_cuisine = st.selectbox(
             "Choose a cuisine to explore:",
             ["(pick a cuisine)"] + cuisine_options
         )
-    
+
         if selected_cuisine != "(pick a cuisine)":
+            # 🍽️ Cuisine Summary Dashboard (correct KPI logic)
             st.subheader("🍽️ Cuisine Summary Dashboard")
             q_cui_kpi = """
-            MATCH (c:Cuisine {name:$cuisine})-[:HAS_DISH]->(d:Dish)
-            WITH c, collect(DISTINCT d) AS allDishes, size(collect(DISTINCT d)) AS totalDishes
-            MATCH (c)-[:HAS_DISH]->(d2:Dish)-[:USES]->(i:Ingredient)
-            WHERE d2 IN allDishes AND i.study_food = true
-            WITH c, totalDishes,
-                 COLLECT(DISTINCT d2) AS studyDishes,
-                 COLLECT(DISTINCT i) AS studyIngredients
+            MATCH (c:Cuisine)
+            WHERE toLower(c.name) = toLower($cuisine)
+
+            // Get all ingredients in the cuisine
+            OPTIONAL MATCH (c)-[:HAS_DISH]->(:Dish)-[:USES]->(i_all:Ingredient)
+            WITH c, COLLECT(DISTINCT i_all) AS all_ingredients
+
+            // Get all study ingredients
+            OPTIONAL MATCH (c)-[:HAS_DISH]->(:Dish)-[:USES]->(i_study:Ingredient)
+            WHERE i_study.study_food = true
+            WITH c, all_ingredients, COLLECT(DISTINCT i_study) AS study_ingredients
+
             RETURN
               c.name AS Cuisine,
-              totalDishes AS TotalDishes,
-              size(studyDishes) AS DishesWithStudyFood,
-              size(studyIngredients) AS DistinctStudyIngredients
+              SIZE(study_ingredients) AS Total_Study_Ingredients,
+              SIZE(all_ingredients) AS Total_Ingredients,
+              CASE WHEN SIZE(all_ingredients) = 0
+                   THEN 0.0
+                   ELSE ROUND((SIZE(study_ingredients) * 100.0 / SIZE(all_ingredients)), 1)
+              END AS Percent_Study_Ingredients
             """
             df_cui_kpi = pd.DataFrame(run_query(q_cui_kpi, {"cuisine": selected_cuisine}))
             if not df_cui_kpi.empty:
                 row = df_cui_kpi.iloc[0]
-                k1, k2 = st.columns(2)
-                k3, _ = st.columns(2)
-                k1.metric("Total_Dishes", row["TotalDishes"])
-                k2.metric("Dishes_with_Study_Foods", row["DishesWithStudyFood"])
-                k3.metric("Distinct_Study_Ingredients", row["DistinctStudyIngredients"])
-    
-            # ⭐ Signature Flavors
+                k1, k2, k3 = st.columns(3)
+                k1.metric("Total Study Ingredients", row["Total_Study_Ingredients"])
+                k2.metric("Total Ingredients", row["Total_Ingredients"])
+                k3.metric("Percent Study Ingredients", f'{row["Percent_Study_Ingredients"]}%')
+
+            # ⭐ Signature Flavors of Selected Cuisine
             st.subheader("⭐ Signature Flavors of Selected Cuisine")
             q_cui_ing = """
-            MATCH (c:Cuisine {name:$cuisine})-[:HAS_DISH]->(d:Dish)-[:USES]->(i:Ingredient)
+            MATCH (c:Cuisine)
+            WHERE toLower(c.name) = toLower($cuisine)
+            MATCH (c)-[:HAS_DISH]->(d:Dish)-[:USES]->(i:Ingredient)
             WHERE i.study_food = true
             RETURN i.name AS Ingredient, COUNT(DISTINCT d) AS Frequency
             ORDER BY Frequency DESC
@@ -372,11 +372,54 @@ elif page == "📊 Map of Flavors Dashboard":
                     title=f"Signature Flavors of {selected_cuisine}"
                 )
                 st.plotly_chart(fig, use_container_width=True)
-    
-            st.info("For the full 🧬 Flavor Network - Click to explore! view, use the NeoDash dashboard on desktop. 💻")
 
+            # 🧬 Flavor Network - Click to explore! (Cuisine network)
+            st.subheader("🧬 Flavor Network - Click to explore!")
 
-        st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
+            q_cui_net = """
+            MATCH (c:Cuisine)
+            WHERE toLower(c.name) = toLower($cuisine)
+
+            OPTIONAL MATCH (c)-[:HAS_DISH]->(d:Dish)-[:USES]->(i:Ingredient)
+            WHERE i.study_food = true
+            WITH c, d, i
+            WHERE d IS NOT NULL AND i IS NOT NULL
+            WITH c, d, i
+            ORDER BY rand()
+            LIMIT 25
+
+            RETURN c.name AS Cuisine, d.name AS Dish, i.name AS Ingredient
+            """
+            df_cui_net = pd.DataFrame(run_query(q_cui_net, {"cuisine": selected_cuisine}))
+            if not df_cui_net.empty:
+                net2 = Network(
+                    height="600px",
+                    width="100%",
+                    bgcolor="#0e1117",
+                    font_color="white"
+                )
+                net2.force_atlas_2based()
+
+                for _, row in df_cui_net.iterrows():
+                    cui = row["Cuisine"]
+                    dish = row["Dish"]
+                    ing = row["Ingredient"]
+
+                    net2.add_node(cui, label=cui, color="#ffd166", shape="dot")
+                    net2.add_node(dish, label=dish, color="#5e60ce", shape="dot")
+                    net2.add_node(ing, label=ing, color="#80ffdb", shape="dot")
+
+                    net2.add_edge(cui, dish)
+                    net2.add_edge(dish, ing)
+
+                net2.save_graph("cuisine_network.html")
+                with open("cuisine_network.html", "r", encoding="utf-8") as f:
+                    html_graph2 = f.read()
+                components.html(html_graph2, height=600, scrolling=True)
+            else:
+                st.info("No network connections found for this cuisine.")
+
+            st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
     # =========================
     # 🧠 FULL NEODASH DASHBOARD (DESKTOP)
@@ -400,6 +443,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
