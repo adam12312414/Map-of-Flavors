@@ -199,7 +199,6 @@ elif page == "📊 Map of Flavors Dashboard":
         fun_facts_html = [
             """
             <div class='fact-card'>
-                <div class='fact-title'> 🤯 Flavor Fun Facts </div>
                 <div class='fact-text'>
                 🥚💭 Eggs include choline, an essential vitamin that helps brain cells 
                 communicate more quickly and effectively — one of the best foods to eat 
@@ -209,7 +208,6 @@ elif page == "📊 Map of Flavors Dashboard":
             """,
             """
             <div class='fact-card'>
-                <div class='fact-title'> 🍽️ Flavor Fun Facts </div>
                 <div class='fact-text'>
                 🥜🤎 Studies suggest that eating just one handful of nuts a day can 
                 improve memory and focus in only a few weeks! 💡⚡
@@ -497,6 +495,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
