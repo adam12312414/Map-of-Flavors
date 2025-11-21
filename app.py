@@ -97,7 +97,7 @@ elif page == "📊 Map of Flavors Dashboard":
             # move the emoji into the value (NeoDash style)
             col1.metric("Total Cuisines", f"🌎 {kpi['cuisines']}")
             col2.metric("Total Dishes", f"🍽️ {kpi['dishes']}")
-            col3.metric("Total Ingredients", f"🥗 {kpi['ingredients']}")
+            col3.metric("Total Ingredients", f"🥦 {kpi['ingredients']}")
 
             percent_study = round(kpi["study_ingredients"] * 100.0 / kpi["ingredients"], 1)
 
@@ -108,7 +108,7 @@ elif page == "📊 Map of Flavors Dashboard":
         # -----------------------------
         # 🧠 Top 10 Ingredients, Regions, Cuisines, Dishes
         # -----------------------------
-        st.subheader("🧠🔍 Top 10 Ingredients")
+        st.subheader("🧠🍳Top 10 Ingredients That Help You Study Better")
 
         q_ingredients = """
         MATCH (i:Ingredient)
@@ -126,7 +126,7 @@ elif page == "📊 Map of Flavors Dashboard":
             st.info("No study ingredients found in the data.")
 
         # 🌍 Regions with most study ingredients
-        st.subheader("📗🍃 Regions Full of Focus-Enhancing Foods")
+        st.subheader("🗺️🥬 Regions Full of Focus-Enhancing Dishes!")
         q_regions = """
         MATCH (r:Region)-[:HAS_CUISINE]->(c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i:Ingredient)
         WHERE i.study_food = true
@@ -142,7 +142,7 @@ elif page == "📊 Map of Flavors Dashboard":
             st.info("No region data found.")
 
         # 🍜 Cuisines packed with study foods
-        st.subheader("📚🌍 Cuisines Packed with Study Foods")
+        st.subheader("🍱🌍 Cuisines Packed With Brain-Boosting Foods!")
         q_cuisines = """
         MATCH (c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i:Ingredient)
         WHERE i.study_food = true
@@ -157,7 +157,7 @@ elif page == "📊 Map of Flavors Dashboard":
             st.plotly_chart(fig, use_container_width=True)
 
         # 🍽️ Top dishes packed with study ingredients
-        st.subheader("🧠🍲 Top Dishes Packed With Study-Boosting Ingredients")
+        st.subheader("🧠🥗 Top Dishes Packed With Study-Boosting Ingredients")
         q_dishes = """
         MATCH (d:Dish)-[:USES]->(i:Ingredient)
         WHERE i.study_food = true
@@ -173,9 +173,9 @@ elif page == "📊 Map of Flavors Dashboard":
 
         st.markdown("---")
         
-        # 🤓 Flavor Fun Facts (NeoDash-style cards)
+        # Flavor Fun Facts (NeoDash-style cards)
         # ---------------------------------------------
-        st.subheader("🤓 Flavor Fun Facts")
+        st.subheader("🤔 Flavor Fun Facts")
 
         st.markdown("""
         <style>
@@ -229,7 +229,7 @@ elif page == "📊 Map of Flavors Dashboard":
         # 🧂 INGREDIENT SECTION (matches NeoDash order)
         # ===================================
         st.subheader("Pick Your Fav Ingredients 💥 🧂")
-        st.caption("Choose your favourite brain-boosting ingredients:")
+        st.caption("Choose your favourite ingredients:")
 
         # === Ingredient list: ALL ingredients (not just study_food)
         ing_list_q = """
@@ -284,11 +284,28 @@ elif page == "📊 Map of Flavors Dashboard":
             """
             df_ing_stats = pd.DataFrame(run_query(q_ing_summary, {"ingredients": selected_ingredients}))
             if not df_ing_stats.empty:
-                # Turn ingredient list into a nice string
-                df_ing_stats["Selected_Ingredients"] = df_ing_stats["Selected_Ingredients"].apply(
-                    lambda lst: ", ".join(lst)
+                row = df_ing_stats.iloc[0]
+
+                # ⭐ Replace table with KPI cards
+                k1, k2, k3 = st.columns(3)
+
+                # 🌎 Total cuisines using your selected ingredients
+                k1.metric(
+                    label="Total Cuisines",
+                    value=f"🌎 {row['Total_Cuisines']}"
                 )
-                st.table(df_ing_stats)
+
+                # 🍽️ Total dishes using your ingredients
+                k2.metric(
+                    label="Total Dishes",
+                    value=f"🍽️ {row['Total_Dishes']}"
+                )
+
+                # 🧠 Percent study-food ingredients among selected
+                k3.metric(
+                    label="Study-Food %",
+                    value=f"📊 {row['Percent_Study_Ingredients']}%"
+                )
 
             # 😋🔥 Which Cuisines Love Your Ingredients?
             st.subheader("😋🔥 Which Cuisines Love Your Ingredients?")
@@ -315,7 +332,7 @@ elif page == "📊 Map of Flavors Dashboard":
                 st.plotly_chart(fig, use_container_width=True)
 
             # 🕸️ Ingredient Spider-Web (network graph)
-            st.subheader("🕸️ Ingredient Spider-Web of Flavors")
+            st.subheader("🕸️🍽️ Ingredient Spider-Web of Tasty Connections")
 
             q_net = """
             MATCH (i:Ingredient)<-[:USES]-(d:Dish)<-[:HAS_DISH]-(c:Cuisine)
@@ -404,9 +421,24 @@ elif page == "📊 Map of Flavors Dashboard":
             if not df_cui_kpi.empty:
                 row = df_cui_kpi.iloc[0]
                 k1, k2, k3 = st.columns(3)
-                k1.metric("Total Study Ingredients", row["Total_Study_Ingredients"])
-                k2.metric("Total Ingredients", row["Total_Ingredients"])
-                k3.metric("Percent Study Ingredients", f'{row["Percent_Study_Ingredients"]}%')
+
+                # 🧠 total study ingredients
+                k1.metric(
+                    label="Total Study Ingredients",
+                    value=f"🧠 {row['Total_Study_Ingredients']}"
+                )
+
+                # 🥗 total ingredients
+                k2.metric(
+                    label="Total Ingredients",
+                    value=f"🥗 {row['Total_Ingredients']}"
+                )
+
+                # 📊 percent study ingredients
+                k3.metric(
+                    label="Percent Study Ingredients",
+                    value=f"📊 {row['Percent_Study_Ingredients']}%"
+                )
 
             # ⭐ Signature Flavors of Selected Cuisine
             st.subheader("⭐ Signature Flavors of Selected Cuisine")
@@ -499,6 +531,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
