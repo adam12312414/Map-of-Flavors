@@ -168,17 +168,58 @@ elif page == "📊 Map of Flavors Dashboard":
             st.info("No dish data found.")
 
         st.markdown("---")
-
-        # 🤓 Flavor Fun Facts (added section)
+        
+        # 🤓 Flavor Fun Facts (NeoDash-style cards)
+        # ---------------------------------------------
         st.subheader("🤓 Flavor Fun Facts")
 
-        fun_facts = [
-            "🍳🐣 Eggs include choline, an essential vitamin that helps brain cells communicate more quickly and effectively, making it one of the finest meals to eat before studying or an exam. 🎯🧠",
-            "🌰🥜 Studies suggest that eating just one handful of nuts a day can improve memory and focus in only a few weeks! 💡⚡",
+        st.markdown("""
+        <style>
+        .fact-card {
+            background-color: #111827;
+            border: 1px solid #374151;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .fact-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .fact-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        fun_facts_html = [
+            """
+            <div class='fact-card'>
+                <div class='fact-title'> 🤯 Flavor Fun Facts </div>
+                <div class='fact-text'>
+                🥚💭 Eggs include choline, an essential vitamin that helps brain cells 
+                communicate more quickly and effectively — one of the best foods to eat 
+                before studying or an exam! 🎯🧠
+                </div>
+            </div>
+            """,
+            """
+            <div class='fact-card'>
+                <div class='fact-title'> 🍽️ Flavor Fun Facts </div>
+                <div class='fact-text'>
+                🥜🤎 Studies suggest that eating just one handful of nuts a day can 
+                improve memory and focus in only a few weeks! 💡⚡
+                </div>
+            </div>
+            """
         ]
 
-        for fact in fun_facts:
-            st.info(fact)
+        for card in fun_facts_html:
+            st.markdown(card, unsafe_allow_html=True)
 
         st.markdown("---")
 
@@ -456,6 +497,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
