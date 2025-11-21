@@ -224,7 +224,7 @@ elif page == "📊 Map of Flavors Dashboard":
         if selected_ingredients:
             # ⭐📊 Ingredient Summary Dashboard
             st.subheader("⭐📊 Ingredient Summary Dashboard")
-
+    
             rows = []
             for ing in selected_ingredients:
                 q_ing_stats = """
@@ -248,7 +248,7 @@ elif page == "📊 Map of Flavors Dashboard":
             if rows:
                 df_ing_stats = pd.DataFrame(rows)
                 st.table(df_ing_stats)
-
+    
             # 😋🔥 Which Cuisines Love Your Ingredients?
             st.subheader("😋🔥 Which Cuisines Love Your Ingredients?")
             q_ing_cui = """
@@ -268,12 +268,54 @@ elif page == "📊 Map of Flavors Dashboard":
                     title="Which Cuisines Love Your Ingredients?"
                 )
                 st.plotly_chart(fig, use_container_width=True)
-
+    
+        # --- NETWORK GRAPH SECTION (always visible after ingredient analysis) ---
         st.markdown("---")
-
-        # 🔟 Cuisine Explorer (after ingredients)
+        st.subheader("🕸️ Flavor Network – Click to Explore")
+    
+        selected_ingredients_net = st.multiselect(
+            "Pick ingredients to visualize their connections:",
+            ing_options
+        )
+    
+        if selected_ingredients_net:
+            q_net = """
+            MATCH (i:Ingredient)<-[:USES]-(d:Dish)<-[:HAS_DISH]-(c:Cuisine)
+            WHERE i.name IN $ingredients
+            RETURN i.name AS Ingredient, d.name AS Dish, c.name AS Cuisine
+            """
+            data_net = run_query(q_net, {"ingredients": selected_ingredients_net})
+            df_net = pd.DataFrame(data_net)
+    
+            if not df_net.empty:
+                net = Network(height="600px", width="100%", bgcolor="#0e1117", font_color="white")
+                net.force_atlas_2based()
+    
+                for _, row in df_net.iterrows():
+                    ing = row["Ingredient"]
+                    dish = row["Dish"]
+                    cui = row["Cuisine"]
+    
+                    net.add_node(ing, label=ing, color="#80ffdb")
+                    net.add_node(dish, label=dish, color="#5e60ce")
+                    net.add_node(cui, label=cui, color="#64dfdf")
+    
+                    net.add_edge(ing, dish)
+                    net.add_edge(dish, cui)
+    
+                net.save_graph("network_graph.html")
+                with open("network_graph.html", "r", encoding="utf-8") as f:
+                    html_graph = f.read()
+    
+                components.html(html_graph, height=600, scrolling=True)
+            else:
+                st.info("No network connections found for the selected ingredients.")
+    
+    
+        # 🔟 Cuisine Explorer (MUST be outside ingredient selection)
+        st.markdown("---")
         st.subheader("Where Shall We Eat Today? 😋")
-
+    
         cuisine_list_q = """
         MATCH (c:Cuisine)
         RETURN DISTINCT c.name AS cuisine
@@ -281,14 +323,13 @@ elif page == "📊 Map of Flavors Dashboard":
         """
         df_c_list = pd.DataFrame(run_query(cuisine_list_q))
         cuisine_options = df_c_list["cuisine"].tolist() if not df_c_list.empty else []
-
+    
         selected_cuisine = st.selectbox(
             "Choose a cuisine to explore:",
             ["(pick a cuisine)"] + cuisine_options
         )
-
+    
         if selected_cuisine != "(pick a cuisine)":
-            # 🍽️ Cuisine Summary Dashboard
             st.subheader("🍽️ Cuisine Summary Dashboard")
             q_cui_kpi = """
             MATCH (c:Cuisine {name:$cuisine})-[:HAS_DISH]->(d:Dish)
@@ -312,8 +353,8 @@ elif page == "📊 Map of Flavors Dashboard":
                 k1.metric("Total_Dishes", row["TotalDishes"])
                 k2.metric("Dishes_with_Study_Foods", row["DishesWithStudyFood"])
                 k3.metric("Distinct_Study_Ingredients", row["DistinctStudyIngredients"])
-
-            # ⭐ Signature Flavors of Selected Cuisine
+    
+            # ⭐ Signature Flavors
             st.subheader("⭐ Signature Flavors of Selected Cuisine")
             q_cui_ing = """
             MATCH (c:Cuisine {name:$cuisine})-[:HAS_DISH]->(d:Dish)-[:USES]->(i:Ingredient)
@@ -331,8 +372,9 @@ elif page == "📊 Map of Flavors Dashboard":
                     title=f"Signature Flavors of {selected_cuisine}"
                 )
                 st.plotly_chart(fig, use_container_width=True)
-
+    
             st.info("For the full 🧬 Flavor Network - Click to explore! view, use the NeoDash dashboard on desktop. 💻")
+
 
         st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
@@ -358,6 +400,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
