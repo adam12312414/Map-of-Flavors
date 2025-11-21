@@ -55,36 +55,14 @@ elif page == "📊 Map of Flavors Dashboard":
 
     st.markdown("🔑 **Password:**")
     st.code("hx16lNc8kwMK5KEUYraRvCTpmmA8g9rKl6toAatnNgw", language=None)
-
-    # 📱 MOBILE FIX — horizontal scroll instead of forcing resize
-    st.markdown("""
-    <style>
-    @media (max-width: 600px) {
-        /* The outer container Streamlit uses */
-        .stElementContainer {
-            overflow-x: scroll !important;
-        }
-
-        /* The actual iframe */
-        .stElementContainer iframe {
-            width: 1200px !important;
-            height: 1600px !important;
-        }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Wrap iframe inside a div so scroll always works
-    st.markdown("<div class='stElementContainer'>", unsafe_allow_html=True)
     
     neodash_url = "https://neodash.graphapp.io/?database=neo4j+s://985a5cea.databases.neo4j.io&dashboard=Map%20of%20Flavors&embed=true"
     iframe(neodash_url, height=850, scrolling=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
