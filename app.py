@@ -169,6 +169,19 @@ elif page == "📊 Map of Flavors Dashboard":
 
         st.markdown("---")
 
+        # 🤓 Flavor Fun Facts (added section)
+        st.subheader("🤓 Flavor Fun Facts")
+
+        fun_facts = [
+            "🍳🐣 Eggs include choline, an essential vitamin that helps brain cells communicate more quickly and effectively, making it one of the finest meals to eat before studying or an exam. 🎯🧠",
+            "🌰🥜 Studies suggest that eating just one handful of nuts a day can improve memory and focus in only a few weeks! 💡⚡",
+        ]
+
+        for fact in fun_facts:
+            st.info(fact)
+
+        st.markdown("---")
+
         # ===================================
         # 🧂 INGREDIENT SECTION (matches NeoDash order)
         # ===================================
@@ -443,6 +456,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
