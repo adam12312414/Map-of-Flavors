@@ -55,6 +55,21 @@ elif page == "📊 Map of Flavors Dashboard":
 
     st.markdown("🔑 **Password:**")
     st.code("hx16lNc8kwMK5KEUYraRvCTpmmA8g9rKl6toAatnNgw", language=None)
+
+    # 📱 Mobile-only fix for NeoDash iframe responsiveness
+    st.markdown("""
+    <style>
+    @media (max-width: 600px) {
+        iframe {
+            width: 100% !important;
+            max-width: 100% !important;
+            transform: scale(0.90);
+            transform-origin: top center;
+            height: 1400px !important;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
     
     neodash_url = "https://neodash.graphapp.io/?database=neo4j+s://985a5cea.databases.neo4j.io&dashboard=Map%20of%20Flavors&embed=true"
     iframe(neodash_url, height=850, scrolling=True)
@@ -62,6 +77,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
