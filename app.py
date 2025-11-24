@@ -101,7 +101,8 @@ elif page == "📊 Map of Flavors Dashboard":
         st.markdown("---")
 
         # 🧠 Top 10 Ingredients, Regions, Cuisines, Dishes
-        st.subheader("🧠🍳Top 10 Ingredients That Help You Study Better")
+        st.markdown("### 🧠🍳 Top 10 Ingredients That Help You Study Better", unsafe_allow_html=True)
+        st.markdown("<div style='margin-top:-25px;'></div>", unsafe_allow_html=True)  # reduce space
 
         q_ingredients = """
         MATCH (i:Ingredient)
@@ -619,6 +620,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
