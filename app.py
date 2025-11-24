@@ -70,7 +70,7 @@ elif page == "📊 Map of Flavors Dashboard":
     )
 
     # 📱 SIMPLE STREAMLIT DASHBOARD (MOBILE-FRIENDLY)
-    if view_mode == "📱 Simple mobile-friendly dashboard":
+    if view_mode == "📱 Mobile-friendly dashboard":
         # 🌍 Global Dataset Summary
         st.subheader("🌍 Global Dataset Summary")
 
@@ -628,6 +628,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
