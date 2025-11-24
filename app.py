@@ -132,7 +132,7 @@ elif page == "📊 Map of Flavors Dashboard":
                 font_color="white",
                 xaxis_title="Ingredient",
                 yaxis_title="Uses",
-                showlegend=False
+                showlegend=False,
                 title=None
             )
         
@@ -619,6 +619,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
