@@ -266,6 +266,40 @@ def main():
     </style>
     """, unsafe_allow_html=True)
 
+    st.markdown("""
+    <style>
+    /* --- Keep the 3 quick-action buttons in one row on phones --- */
+    @media (max-width: 768px){
+    
+      /* Target any horizontal block (the thing created by st.columns) */
+      div[data-testid="stHorizontalBlock"]{
+        flex-direction: row !important;      /* don't stack */
+        flex-wrap: nowrap !important;        /* keep in one line */
+        gap: 8px !important;                 /* small gap between cols */
+      }
+    
+      /* Make each column share the row nicely */
+      div[data-testid="stHorizontalBlock"] > div{
+        min-width: 0 !important;
+        flex: 1 1 0 !important;              /* equal width */
+      }
+    
+      /* Tighter buttons so all 3 fit comfortably */
+      .stButton > button{
+        width: 100% !important;
+        padding: 10px 8px !important;
+        font-size: 16px !important;
+        line-height: 1.1 !important;
+      }
+    }
+    
+    /* Optional: slightly tighten the header space on mobile */
+    @media (max-width: 480px){
+      .stMarkdown h2{ margin-top: 8px !important; }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     # === Header ===
     st.markdown("""
     <div style="margin-left:-60px;">
@@ -488,6 +522,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
