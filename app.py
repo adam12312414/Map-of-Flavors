@@ -129,17 +129,18 @@ elif page == "📊 Map of Flavors Dashboard":
                 x="Ingredient",
                 y="Uses",
                 title="Top 10 Brain-Boosting Ingredients",
-                color="Ingredient",  # each bar gets a unique color
+                color="Ingredient",  # color by ingredient
                 color_discrete_sequence=bar_colors[:len(df_ing)]
             )
         
-            # 🖤 Match NeoDash dark theme
+            # 🖤 Match NeoDash dark theme + hide legend
             fig.update_layout(
                 plot_bgcolor="#0e1117",
                 paper_bgcolor="#0e1117",
                 font_color="white",
                 xaxis_title="Ingredient",
-                yaxis_title="Uses"
+                yaxis_title="Uses",
+                showlegend=False
             )
         
             st.plotly_chart(fig, use_container_width=True)
@@ -552,6 +553,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
