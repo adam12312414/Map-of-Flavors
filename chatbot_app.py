@@ -213,6 +213,52 @@ def main():
     </style>
     """, unsafe_allow_html=True)
 
+    # Mobile-only responsive tweaks
+    st.markdown("""
+    <style>
+    @media (max-width: 768px) {
+    
+        h1 {
+            font-size: 34px !important;
+            line-height: 1.2 !important;
+            text-align: center !important;
+            margin-top: -10px !important;
+        }
+    
+        p {
+            font-size: 16px !important;
+            text-align: center !important;
+        }
+    
+        div[style*='friendly data chef'] {
+            font-size: 16px !important;
+            margin-top: -5px !important;
+            margin-bottom: 15px !important;
+        }
+    
+        .stButton>button {
+            width: 100% !important;
+            display: block !important;
+            margin: 8px auto !important;
+            font-size: 16px !important;
+            padding: 10px 0 !important;
+        }
+    
+        .block-container {
+            padding-top: 1rem !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+    
+        .stMarkdown h2, .stMarkdown h3 {
+            margin-top: 10px !important;
+            font-size: 20px !important;
+            text-align: center !important;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     # === Header ===
     st.markdown("""
     <div style="margin-left:-60px;">
@@ -435,6 +481,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
