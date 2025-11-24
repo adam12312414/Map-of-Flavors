@@ -169,6 +169,7 @@ elif page == "📊 Map of Flavors Dashboard":
         
             # 🖤 Match NeoDash dark theme
             fig.update_layout(
+                margin=dict(t=10, b=50, l=50, r=20),
                 plot_bgcolor="#0e1117",
                 paper_bgcolor="#0e1117",
                 font_color="white",
@@ -176,6 +177,7 @@ elif page == "📊 Map of Flavors Dashboard":
                 legend_font_size=16,   
                 legend_title_text="",      
                 title_font_size=22,
+                title=""
             )
         
             st.plotly_chart(fig, use_container_width=True)
@@ -208,12 +210,14 @@ elif page == "📊 Map of Flavors Dashboard":
         
             # Dark theme + clean layout
             fig.update_layout(
+                margin=dict(t=10, b=50, l=50, r=20),
                 plot_bgcolor="#0e1117",
                 paper_bgcolor="#0e1117",
                 font_color="white",
                 xaxis_title="Cuisine",
                 yaxis_title="Number of Study Ingredients",
-                showlegend=False
+                showlegend=False,
+                title=""
             )
         
             st.plotly_chart(fig, use_container_width=True)
@@ -395,12 +399,14 @@ elif page == "📊 Map of Flavors Dashboard":
                 )
             
                 fig.update_layout(
+                    margin=dict(t=10, b=50, l=50, r=20),
                     plot_bgcolor="#0e1117",
                     paper_bgcolor="#0e1117",
                     font_color="white",
                     xaxis_title="Cuisine",
                     yaxis_title="Uses",
-                    showlegend=False
+                    showlegend=False,
+                    title=""
                 )
             
                 st.plotly_chart(fig, use_container_width=True)
@@ -540,12 +546,14 @@ elif page == "📊 Map of Flavors Dashboard":
             
                 # 🖤 Dark theme styling
                 fig.update_layout(
+                    margin=dict(t=10, b=50, l=50, r=20),
                     plot_bgcolor="#0e1117",
                     paper_bgcolor="#0e1117",
                     font_color="white",
                     xaxis_title="Ingredient",
                     yaxis_title="Frequency",
-                    showlegend=False
+                    showlegend=False,
+                    title=""
                 )
             
                 st.plotly_chart(fig, use_container_width=True)
@@ -620,6 +628,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
