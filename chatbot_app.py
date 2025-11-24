@@ -7,7 +7,7 @@ from openai import OpenAI
 import random
 
 def main():
-    # ✅ Load all secrets safely
+    # Load all secrets safely
     NEO4J_URI = st.secrets["NEO4J_URI"]
     NEO4J_USER = st.secrets["NEO4J_USER"]
     NEO4J_PASS = st.secrets["NEO4J_PASS"]
@@ -22,7 +22,7 @@ def main():
             result = session.run(cypher)
             return [record.data() for record in result]
 
-    # === System Prompt ===
+    # System Prompt
     SYSTEM_PROMPT = """
     You are Cook-E 🤖🍪 — Temasek Polytechnic’s friendly data-chef chatbot who turns FOOD DATA into tasty insights!  
 
@@ -165,7 +165,7 @@ def main():
     Let visitors leave saying, “Wah, Cook-E quite steady sia — data also can make so fun one!”
     """
 
-    # === Streamlit Setup ===
+    # Streamlit Setup
     st.set_page_config(page_title="Cook-E's Map of Flavors 🍪", page_icon="🍪", layout="centered")
 
     st.markdown("""
@@ -236,7 +236,7 @@ def main():
             margin-bottom: 15px !important;
         }
     
-        /* ✅ Keep 3 buttons side by side even on mobile */
+        /* Keep 3 buttons side by side even on mobile */
         .stButton>button {
             width: auto !important;
             min-width: 100px !important;
@@ -268,23 +268,20 @@ def main():
 
     st.markdown("""
     <style>
-    /* --- Keep the 3 quick-action buttons in one row on phones --- */
     @media (max-width: 768px){
     
       /* Target any horizontal block (the thing created by st.columns) */
       div[data-testid="stHorizontalBlock"]{
-        flex-direction: row !important;      /* don't stack */
-        flex-wrap: nowrap !important;        /* keep in one line */
-        gap: 8px !important;                 /* small gap between cols */
+        flex-direction: row !important;     
+        flex-wrap: nowrap !important;     
+        gap: 8px !important;                 
       }
     
-      /* Make each column share the row nicely */
       div[data-testid="stHorizontalBlock"] > div{
         min-width: 0 !important;
-        flex: 1 1 0 !important;              /* equal width */
+        flex: 1 1 0 !important;   
       }
     
-      /* Tighter buttons so all 3 fit comfortably */
       .stButton > button{
         width: 100% !important;
         padding: 10px 8px !important;
@@ -293,14 +290,13 @@ def main():
       }
     }
     
-    /* Optional: slightly tighten the header space on mobile */
     @media (max-width: 480px){
       .stMarkdown h2{ margin-top: 8px !important; }
     }
     </style>
     """, unsafe_allow_html=True)
 
-    # === Header ===
+    # Header
     st.markdown("""
     <div style="margin-left:-60px;">
     <h1 style="font-size:55px; white-space:nowrap; margin:0;">
@@ -362,9 +358,9 @@ def main():
     user_question = st.text_input("Ask a question here:")
     if question is None and user_question: question = user_question
 
-    # === Main Logic ===
+    # Main Logic
     if question:
-        # 1. If the question comes from button JSON, skip GPT ---
+        # 1. If the question comes from button JSON, skip GPT
         try:
             preset = json.loads(question)
             if "cypher" in preset:
@@ -425,7 +421,7 @@ def main():
             if "text" in ai_output:
                 insight = ai_output["text"]
 
-                # 🎓 Context-aware TP analogies (multi-line)
+                # Context-aware TP analogies (multi-line)
                 tp_analogies = {
                     "italian": [
                         "🍝 Italian cuisine is full of creativity — like TP’s Design School sia!",
@@ -480,7 +476,7 @@ def main():
                 margin-top:15px;">🍪 <b>Cook-E says:</b> {insight}</div>
                 """, unsafe_allow_html=True)
 
-            # === CHART OUTPUT ===
+            # CHART OUTPUT
             else:
                 cypher_query = ai_output.get("cypher", "").strip()
                 chart_type = ai_output.get("chart", "table")
@@ -522,6 +518,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
