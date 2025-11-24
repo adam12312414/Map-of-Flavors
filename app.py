@@ -120,7 +120,28 @@ elif page == "📊 Map of Flavors Dashboard":
         """
         df_ing = pd.DataFrame(run_query(q_ingredients))
         if not df_ing.empty:
-            fig = px.bar(df_ing, x="Ingredient", y="Uses", title="Top 10 Brain-Boosting Ingredients")
+            # 🎨 Custom color palette (NeoDash-style)
+            bar_colors = px.colors.qualitative.Vivid + px.colors.qualitative.Pastel + px.colors.qualitative.Bold
+        
+            # 🧠 Bar chart with unique colors per bar
+            fig = px.bar(
+                df_ing,
+                x="Ingredient",
+                y="Uses",
+                title="Top 10 Brain-Boosting Ingredients",
+                color="Ingredient",  # each bar gets a unique color
+                color_discrete_sequence=bar_colors[:len(df_ing)]
+            )
+        
+            # 🖤 Match NeoDash dark theme
+            fig.update_layout(
+                plot_bgcolor="#0e1117",
+                paper_bgcolor="#0e1117",
+                font_color="white",
+                xaxis_title="Ingredient",
+                yaxis_title="Uses"
+            )
+        
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("No study ingredients found in the data.")
@@ -531,6 +552,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # === PAGE 4: CHATBOT ===
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
