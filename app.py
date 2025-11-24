@@ -149,8 +149,33 @@ elif page == "📊 Map of Flavors Dashboard":
         """
         df_reg = pd.DataFrame(run_query(q_regions))
         if not df_reg.empty:
-            fig = px.pie(df_reg, names="Region", values="TotalStudyFoods",
-                         title="Regions Full of Focus-Enhancing Foods")
+            fig = px.pie(
+                df_reg,
+                names="Region",
+                values="TotalStudyFoods",
+                title="Regions Full of Focus-Enhancing Foods",
+                color_discrete_sequence=px.colors.qualitative.Vivid
+            )
+        
+            # Improve label sharpness + font clarity
+            fig.update_traces(
+                textinfo="percent+label",
+                textfont_size=18,       
+                textfont_color="white",   
+                pull=[0.03] * len(df_reg)  
+            )
+        
+            # 🖤 Match NeoDash dark theme
+            fig.update_layout(
+                plot_bgcolor="#0e1117",
+                paper_bgcolor="#0e1117",
+                font_color="white",
+                showlegend=True,
+                legend_font_size=16,   
+                legend_title_text="",      
+                title_font_size=22,
+            )
+        
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("No region data found.")
@@ -593,6 +618,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
