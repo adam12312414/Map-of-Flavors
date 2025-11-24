@@ -236,12 +236,19 @@ def main():
             margin-bottom: 15px !important;
         }
     
+        /* ✅ Keep 3 buttons side by side even on mobile */
         .stButton>button {
-            width: 100% !important;
-            display: block !important;
-            margin: 8px auto !important;
+            width: auto !important;
+            min-width: 100px !important;
+            display: inline-block !important;
+            margin: 5px 8px !important;
             font-size: 16px !important;
-            padding: 10px 0 !important;
+            padding: 10px 15px !important;
+        }
+    
+        /* Center align all buttons together */
+        .stButton {
+            text-align: center !important;
         }
     
         .block-container {
@@ -481,6 +488,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
