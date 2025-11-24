@@ -65,7 +65,7 @@ elif page == "📊 Map of Flavors Dashboard":
 
     view_mode = st.radio(
         "Choose how to view the dashboard:",
-        ["📱 Simple mobile-friendly dashboard", "🧠 Full NeoDash dashboard"],
+        ["📱 Mobile-friendly dashboard", "🧠 Full NeoDash dashboard"],
         help="Use the simple view on phones. Use the full NeoDash view on laptops/desktops."
     )
 
@@ -628,6 +628,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
