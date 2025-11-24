@@ -133,7 +133,7 @@ elif page == "📊 Map of Flavors Dashboard":
                 xaxis_title="Ingredient",
                 yaxis_title="Uses",
                 showlegend=False,
-                title=None
+                title=""
             )
         
             st.plotly_chart(fig, use_container_width=True)
@@ -619,6 +619,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
