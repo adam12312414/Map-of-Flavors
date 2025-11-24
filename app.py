@@ -1,13 +1,13 @@
 import streamlit as st
 from streamlit.components.v1 import iframe
-import chatbot_app as chatbot   # your Cook-E chatbot file
+import chatbot_app as chatbot 
 import pandas as pd
 import plotly.express as px
 from neo4j import GraphDatabase
 from pyvis.network import Network
 import streamlit.components.v1 as components
 
-# === Neo4j Connection for Dashboard ===
+# Neo4j Connection for Dashboard
 NEO4J_URI = st.secrets["NEO4J_URI"]
 NEO4J_USER = st.secrets["NEO4J_USER"]
 NEO4J_PASS = st.secrets["NEO4J_PASS"]
@@ -21,13 +21,13 @@ def run_query(cypher, params=None):
 
 st.set_page_config(page_title="Map of Flavors", page_icon="🍳", layout="wide")
 
-# === Sidebar Navigation ===
+# Sidebar Navigation
 page = st.sidebar.radio(
     "🍽️ Choose a section",
     ["🏠 Home", "🎯 What Cuisine Are You? Personality Quiz", "📊 Map of Flavors Dashboard", "🤖 Chatbot (Cook-E)"]
 )
 
-# === PAGE 1: HOME ===
+# PAGE 1: HOME
 if page == "🏠 Home":
     st.title("🍳 Map of Flavors (Carte des Saveurs)")
     st.markdown("""
@@ -51,7 +51,7 @@ if page == "🏠 Home":
     </p>
     """, unsafe_allow_html=True)
 
-# === PAGE 2: QUIZ ===
+# PAGE 2: QUIZ
 elif page == "🎯 What Cuisine Are You? Personality Quiz":
     st.title("🎯 What Cuisine Are You?")
     st.markdown("""
@@ -59,7 +59,7 @@ elif page == "🎯 What Cuisine Are You? Personality Quiz":
     """)
     iframe("https://forms.fillout.com/t/pDTHqQYcZrus", height=800, scrolling=True)
 
-# === PAGE 3: DASHBOARD ===
+# PAGE 3: DASHBOARD
 elif page == "📊 Map of Flavors Dashboard":
     st.title("📊 Map of Flavors Dashboard")
 
@@ -69,13 +69,9 @@ elif page == "📊 Map of Flavors Dashboard":
         help="Use the simple view on phones. Use the full NeoDash view on laptops/desktops."
     )
 
-    # =========================
     # 📱 SIMPLE STREAMLIT DASHBOARD (MOBILE-FRIENDLY)
-    # =========================
     if view_mode == "📱 Simple mobile-friendly dashboard":
-        # -----------------------------
         # 🌍 Global Dataset Summary
-        # -----------------------------
         st.subheader("🌍 Global Dataset Summary")
 
         kpi_query = """
@@ -94,7 +90,6 @@ elif page == "📊 Map of Flavors Dashboard":
             kpi = kpi_res[0]
             col1, col2, col3, col4 = st.columns(4)
 
-            # move the emoji into the value (NeoDash style)
             col1.metric("Total Cuisines", f"🌎 {kpi['cuisines']}")
             col2.metric("Total Dishes", f"🍽️ {kpi['dishes']}")
             col3.metric("Total Ingredients", f"🥦 {kpi['ingredients']}")
@@ -105,9 +100,7 @@ elif page == "📊 Map of Flavors Dashboard":
 
         st.markdown("---")
 
-        # -----------------------------
         # 🧠 Top 10 Ingredients, Regions, Cuisines, Dishes
-        # -----------------------------
         st.subheader("🧠🍳Top 10 Ingredients That Help You Study Better")
 
         q_ingredients = """
@@ -120,10 +113,9 @@ elif page == "📊 Map of Flavors Dashboard":
         """
         df_ing = pd.DataFrame(run_query(q_ingredients))
         if not df_ing.empty:
-            # 🎨 Custom color palette (NeoDash-style)
             bar_colors = px.colors.qualitative.Vivid + px.colors.qualitative.Pastel + px.colors.qualitative.Bold
         
-            # 🧠 Bar chart with unique colors per bar
+            #Bar chart with unique colors per bar
             fig = px.bar(
                 df_ing,
                 x="Ingredient",
@@ -133,7 +125,7 @@ elif page == "📊 Map of Flavors Dashboard":
                 color_discrete_sequence=bar_colors[:len(df_ing)]
             )
         
-            # 🖤 Match NeoDash dark theme + hide legend
+            #Match NeoDash dark theme + hide legend
             fig.update_layout(
                 plot_bgcolor="#0e1117",
                 paper_bgcolor="#0e1117",
@@ -174,9 +166,32 @@ elif page == "📊 Map of Flavors Dashboard":
         """
         df_cui = pd.DataFrame(run_query(q_cuisines))
         if not df_cui.empty:
-            fig = px.bar(df_cui, x="Cuisine", y="StudyFoods",
-                         title="Cuisines Packed with Focus-Boosting Ingredients")
+            # 🎨 Custom color palette
+            bar_colors = px.colors.qualitative.Vivid + px.colors.qualitative.Pastel + px.colors.qualitative.Bold
+        
+            # Colorful bar chart with no legend
+            fig = px.bar(
+                df_cui,
+                x="Cuisine",
+                y="StudyFoods",
+                title="Cuisines Packed with Focus-Boosting Ingredients",
+                color="Cuisine",
+                color_discrete_sequence=bar_colors[:len(df_cui)]
+            )
+        
+            # Dark theme + clean layout
+            fig.update_layout(
+                plot_bgcolor="#0e1117",
+                paper_bgcolor="#0e1117",
+                font_color="white",
+                xaxis_title="Cuisine",
+                yaxis_title="Number of Study Ingredients",
+                showlegend=False
+            )
+        
             st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("No cuisine data found.")
 
         # 🍽️ Top dishes packed with study ingredients
         st.subheader("🧠🥗 Top Dishes Packed With Study-Boosting Ingredients")
@@ -196,7 +211,6 @@ elif page == "📊 Map of Flavors Dashboard":
         st.markdown("---")
         
         # Flavor Fun Facts (NeoDash-style cards)
-        # ---------------------------------------------
         st.subheader("🤔 Flavor Fun Facts")
 
         st.markdown("""
@@ -247,13 +261,11 @@ elif page == "📊 Map of Flavors Dashboard":
 
         st.markdown("---")
 
-        # ===================================
-        # 🧂 INGREDIENT SECTION (matches NeoDash order)
-        # ===================================
+        # 🧂 INGREDIENT SECTION 
         st.subheader("Pick Your Fav Ingredients 💥 🧂")
         st.caption("Choose your favourite ingredients:")
 
-        # === Ingredient list: ALL ingredients (not just study_food)
+        # Ingredient list
         ing_list_q = """
         MATCH (i:Ingredient)
         RETURN DISTINCT i.name AS Ingredient
@@ -268,7 +280,7 @@ elif page == "📊 Map of Flavors Dashboard":
         )
 
         if selected_ingredients:
-            # ⭐📊 Ingredient Summary Dashboard (correct KPI logic)
+            # ⭐📊 Ingredient Summary Dashboard
             st.subheader("⭐📊 Ingredient Summary Dashboard")
 
             q_ing_summary = """
@@ -344,14 +356,29 @@ elif page == "📊 Map of Flavors Dashboard":
             """
             df_ing_cui = pd.DataFrame(run_query(q_ing_cui, {"ingredients": selected_ingredients}))
             if not df_ing_cui.empty:
+                bar_colors = px.colors.qualitative.Vivid + px.colors.qualitative.Pastel + px.colors.qualitative.Bold
+            
                 fig = px.bar(
                     df_ing_cui,
                     x="Cuisine",
                     y="ingredient_usage",
-                    title="Which Cuisines Love Your Ingredients?"
+                    title="Which Cuisines Love Your Ingredients?",
+                    color="Cuisine",
+                    color_discrete_sequence=bar_colors[:len(df_ing_cui)]
                 )
-                fig.update_layout(xaxis_title="Cuisine", yaxis_title="Uses")
+            
+                fig.update_layout(
+                    plot_bgcolor="#0e1117",
+                    paper_bgcolor="#0e1117",
+                    font_color="white",
+                    xaxis_title="Cuisine",
+                    yaxis_title="Uses",
+                    showlegend=False
+                )
+            
                 st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("No cuisine data found for your selected ingredients.")
 
             # 🕸️ Ingredient Spider-Web (network graph)
             st.subheader("🕸️🍽️ Ingredient Spider-Web of Tasty Connections")
@@ -395,10 +422,8 @@ elif page == "📊 Map of Flavors Dashboard":
                 st.info("No network connections found for the selected ingredients.")
 
         st.markdown("---")
-
-        # ===================================
+        
         # 😋 CUISINE SECTION (matches NeoDash order)
-        # ===================================
         st.subheader("Where Shall We Eat Today? 😋")
 
         cuisine_list_q = """
@@ -415,7 +440,7 @@ elif page == "📊 Map of Flavors Dashboard":
         )
 
         if selected_cuisine != "(pick a cuisine)":
-            # 🍽️ Cuisine Summary Dashboard (correct KPI logic)
+            # 🍽️ Cuisine Summary Dashboard
             st.subheader("🍽️ Cuisine Summary Dashboard")
             q_cui_kpi = """
             MATCH (c:Cuisine)
@@ -475,13 +500,30 @@ elif page == "📊 Map of Flavors Dashboard":
             """
             df_cui_ing = pd.DataFrame(run_query(q_cui_ing, {"cuisine": selected_cuisine}))
             if not df_cui_ing.empty:
+                bar_colors = px.colors.qualitative.Vivid + px.colors.qualitative.Pastel + px.colors.qualitative.Bold
+            
                 fig = px.bar(
                     df_cui_ing,
                     x="Ingredient",
                     y="Frequency",
-                    title=f"Signature Flavors of {selected_cuisine}"
+                    title=f"Signature Flavors of {selected_cuisine}",
+                    color="Ingredient",
+                    color_discrete_sequence=bar_colors[:len(df_cui_ing)]
                 )
+            
+                # 🖤 Dark theme styling
+                fig.update_layout(
+                    plot_bgcolor="#0e1117",
+                    paper_bgcolor="#0e1117",
+                    font_color="white",
+                    xaxis_title="Ingredient",
+                    yaxis_title="Frequency",
+                    showlegend=False
+                )
+            
                 st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("No signature flavors found for this cuisine.")
 
             # 🧬 Flavor Network - Click to explore! (Cuisine network)
             st.subheader("🧬 Flavor Network - Click to explore!")
@@ -531,9 +573,7 @@ elif page == "📊 Map of Flavors Dashboard":
 
             st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
-    # =========================
     # 🧠 FULL NEODASH DASHBOARD (DESKTOP)
-    # =========================
     else:
         st.markdown("""
         Explore the full interactive NeoDash dashboard with network graphs and filters.  
@@ -550,9 +590,10 @@ elif page == "📊 Map of Flavors Dashboard":
         neodash_url = "https://neodash.graphapp.io/?database=neo4j+s://985a5cea.databases.neo4j.io&dashboard=Map%20of%20Flavors&embed=true"
         iframe(neodash_url, height=850, scrolling=True)
 
-# === PAGE 4: CHATBOT ===
+# PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
