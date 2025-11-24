@@ -101,8 +101,7 @@ elif page == "📊 Map of Flavors Dashboard":
         st.markdown("---")
 
         # 🧠 Top 10 Ingredients, Regions, Cuisines, Dishes
-        st.markdown("### 🧠🍳 Top 10 Ingredients That Help You Study Better", unsafe_allow_html=True)
-        st.markdown("<div style='margin-top:-25px;'></div>", unsafe_allow_html=True)  # reduce space
+        st.subheader("🧠🍳Top 10 Ingredients That Help You Study Better")
 
         q_ingredients = """
         MATCH (i:Ingredient)
@@ -128,6 +127,7 @@ elif page == "📊 Map of Flavors Dashboard":
         
             #Match NeoDash dark theme + hide legend
             fig.update_layout(
+                margin=dict(t=10, b=50, l=50, r=20),
                 plot_bgcolor="#0e1117",
                 paper_bgcolor="#0e1117",
                 font_color="white",
@@ -620,6 +620,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
