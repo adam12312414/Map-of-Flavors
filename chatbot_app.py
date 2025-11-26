@@ -457,59 +457,18 @@ def main():
                     ]
                 }
 
-                # 🍴 TP canteen recommendations (20 cuisines total)
-                tp_canteens = {
-                    "chinese": "🥢 Try local rice and noodle dishes at **Blk 26 Business Park** or **Blk 25 Breadboard**, both with Halal options. 🍚",
-                    "japanese": "🍣 Bento or sushi lovers — check **Blk 28 Designer Pad** or **Blk 30 Bistro Lab** for rotating Japanese menus! 🎨",
-                    "korean": "🇰🇷 Try the Korean stall at **Blk 4 Flavours** (with Halal option) — open 7.30 am – 4.00 pm during term time! 🍱",
-                    "thai": "🌶️ Look for the Thai fusion stall at **Blk 26 Business Park** — open till 6 pm, perfect for that spicy kick! 🔥",
-                    "indian": "🍛 You can find prata and briyani at **Blk 26 Business Park** (with Halal option). 💪",
-                    "malay": "🍗 Nasi lemak or rendang? Head to **Blk 1A Sprout** (with Halal option) — open 7.30 am – 6.00 pm. 🌿",
-                    "vietnamese": "🍜 No dedicated Vietnamese stall, but you can try pho-style noodles at **Blk 26 Business Park** or **Blk 25 Breadboard**! 🇻🇳",
-                    "filipino": "🥘 No specific Filipino stall leh, but **Blk 25 Breadboard** sometimes serves adobo-style chicken — worth a try! 🇵🇭",
-                    "western": "🍔 Grab Western grub at **Blk 26 Business Park** or **Blk 30B TripletS** near McDonald’s! 🍟",
-                    "italian": "🍝 The **Design School Café (Blk 28)** and **Bistro Lab (Blk 30)** occasionally serve pasta or pizza specials — creative vibes! 🎨",
-                    "french": "🥐 For pastries & desserts, check **Blk 31 Top Table (TCA)** or **Sugarloaf (TCA)** — run by Applied Science students 🍰",
-                    "spanish": "🌯 Spanish flavours are rare lah, but **Blk 30 Bistro Lab** sometimes offers tapas or paella-inspired dishes! 🇪🇸",
-                    "greek": "🥗 No Greek stall in TP, but you can get salads & pita-style wraps at **Blk 30B Subway**! 🇬🇷",
-                    "irish": "🍀 No Irish food here leh, but **Blk 30B McDonald’s** has breakfast sets and potatoes — close enough! ☘️",
-                    "british": "🍳 No fish & chips stall, but the Western stall at **Blk 26 Business Park** serves similar comfort meals! 🇬🇧",
-                    "southern_us": "🍗 Craving fried chicken or BBQ? Head to **Blk 30B McDonald’s** or **Blk 30B TripletS** for southern-style vibes! 🇺🇸",
-                    "cajun_creole": "🌶️ No Cajun stall, but **Blk 26 Business Park** has spicy grilled options that come close leh! 🇺🇸",
-                    "mexican": "🌮 No Mexican stall yet, but you can try wraps and sandwiches at **Blk 30B Subway**! 🇲🇽",
-                    "brazilian": "🥩 Wah, no Brazilian stall leh — but if you like grilled meat, try **Blk 26 Business Park** Western stall for steak sets! 🇧🇷",
-                    "jamaican": "🥥 No Jamaican food in TP (yet!), but **Blk 26 Business Park** serves spicy rice bowls that feel similar! 🇯🇲",
-                    "moroccan": "🍢 No Moroccan stall, but you can try Mediterranean-style wraps at **Blk 30B Subway**! 🇲🇦",
-                    "russian": "🥔 Russian dishes not available leh — but try creamy soups or dumplings at **Blk 26 Business Park**! 🇷🇺"
-                }
-            
                 lower_text = insight.lower()
                 matched_cuisine = next((c for c in tp_analogies if c in lower_text), None)
-            
-                # Group all Western-style cuisines under "western"
-                if matched_cuisine in ["british", "irish", "french", "italian", "spanish", "greek", "russian", "southern_us"]:
-                    matched_cuisine = "western"
-            
+
                 if matched_cuisine:
-                    # Add TP analogy
                     insight += f"<br><br>{random.choice(tp_analogies[matched_cuisine])}"
-            
-                    # Always show canteen recommendation if cuisine matched
-                    if matched_cuisine in tp_canteens:
-                        insight += f"""
-                        <div style="margin-top:15px;padding:12px;border-radius:10px;
-                        background:rgba(255,215,0,0.15);border:1px solid #FFD166;
-                        font-size:20px;">
-                        🍴 <b>TP Tip:</b> {tp_canteens[matched_cuisine]}
-                        </div>
-                        """
-                else:
+                elif random.random() < 0.2:
                     generic_lines = [
                         "🍜 TP’s campus got flavours from all over the world — just like this dataset!",
                         "🍪 That’s one more tasty insight cooked up by TP’s own Cook-E!"
                     ]
                     insight += f"<br><br>{random.choice(generic_lines)}"
-            
+
                 st.markdown(f"""
                 <div style="background:linear-gradient(135deg,#00b4d8,#0077b6);padding:30px;
                 border-radius:18px;color:white;font-size:22px;line-height:1.6;
@@ -559,6 +518,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
