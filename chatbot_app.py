@@ -445,14 +445,14 @@ def main():
                     ],
                     "korean": [
                         "🍱 Korean cuisine is trendy and bold — just like the students at TP’s IT School leh!",
-                        "💻 Korean food got that modern touch — very Tech School energy sia!"
+                        "💻 Korean food got that modern touch — very IT School energy sia!"
                     ],
                     "chinese": [
                         "🥢 Chinese cuisine blends tradition and innovation — just like TP’s multidisciplinary learning!",
                         "📚 Traditional yet modern — same same like TP’s learning style!"
                     ],
                     "western": [
-                        "🍔 You can find Western food at TP’s IT and Engineering canteens — classic comfort food everyone loves!",
+                        "🍔 Western food has that easy-going energy — just like TP’s Engineering and IT students tackling projects with style!",
                         "🍟 Western cuisine? Confirm a hit near Design School’s café — chill and satisfying vibes!"
                     ]
                 }
@@ -518,6 +518,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
