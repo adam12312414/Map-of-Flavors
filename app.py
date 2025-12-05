@@ -620,7 +620,7 @@ elif page == "📊 Map of Flavors Dashboard":
             ORDER BY StudyFriendlyIngredients DESC
             LIMIT 10
             """
-            df_dish = pd.DataFrame(run_query(q_dishes))
+            df_dish = pd.DataFrame(run_query(q_dishes, {"cuisine": selected_cuisine}
             
             if not df_dish.empty:
                 st.table(df_dish)
@@ -651,6 +651,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
