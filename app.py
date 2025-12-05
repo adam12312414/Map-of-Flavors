@@ -614,13 +614,14 @@ elif page == "📊 Map of Flavors Dashboard":
             q_dishes = """
             MATCH (c:Cuisine)-[:HAS_DISH]->(d:Dish)-[:USES]->(i:Ingredient)
             WHERE i.study_food = true 
-            AND toLower(c.name) = toLower($cuisine)
+              AND toLower(c.name) = toLower($cuisine)
             WITH d, COUNT(DISTINCT i) AS StudyFriendlyIngredients
             RETURN d.name AS Dish, StudyFriendlyIngredients
             ORDER BY StudyFriendlyIngredients DESC
             LIMIT 10
             """
-            df_dish = pd.DataFrame(run_query(q_dishes, {"cuisine": selected_cuisine}
+            
+            df_dish = pd.DataFrame(run_query(q_dishes, {"cuisine": selected_cuisine}))
             
             if not df_dish.empty:
                 st.table(df_dish)
@@ -628,7 +629,7 @@ elif page == "📊 Map of Flavors Dashboard":
                 st.info("No dish data found.")
             
             st.markdown("---")
-            
+
             st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
     # 🧠 FULL NEODASH DASHBOARD (DESKTOP)
@@ -651,6 +652,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
