@@ -627,8 +627,6 @@ elif page == "📊 Map of Flavors Dashboard":
                 st.table(df_dish)
             else:
                 st.info("No dish data found.")
-            
-            st.markdown("---")
 
             st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
@@ -652,6 +650,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
