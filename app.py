@@ -227,10 +227,11 @@ elif page == "📊 Map of Flavors Dashboard":
         # 🍽️ Top dishes packed with study ingredients
         st.subheader("🧠🥗 Top Dishes Packed With Study-Boosting Ingredients")
         q_dishes = """
-        MATCH (d:Dish)-[:USES]->(i:Ingredient)
-        WHERE i.study_food = true
-        RETURN d.name AS Dish, COUNT(DISTINCT i.name) AS StudyFriendlyIngredients
-        ORDER BY StudyFriendlyIngredients DESC
+        MATCH (d:Dish)-[:USES]->(i:Ingredient {study_food: true})
+        WITH d, COUNT(DISTINCT i) AS StudyFriendlyIngredients
+        MATCH (d)<-[:HAS_DISH]-(c:Cuisine)
+        RETURN d.name AS Dish, c.name AS Cuisine, StudyFriendlyIngredients
+        ORDER BY StudyFriendlyIngredients DESC, Dish ASC
         LIMIT 10
         """
         df_dish = pd.DataFrame(run_query(q_dishes))
@@ -628,6 +629,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
