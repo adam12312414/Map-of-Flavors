@@ -607,44 +607,26 @@ elif page == "📊 Map of Flavors Dashboard":
             else:
                 st.info("No network connections found for this cuisine.")
 
+
             # 🍱 Top Study-Boosting Dishes in Selected Cuisine
             st.subheader("🍱 Top Study-Boosting Dishes in Selected Cuisine")
             
-            q_top_dishes = """
-            MATCH (c:Cuisine)-[:HAS_DISH]->(d:Dish)-[:USES]->(i:Ingredient)
-            WHERE i.study_food = true 
-              AND toLower(c.name) = toLower($cuisine)
+            q_dishes = """
+            MATCH (d:Dish)-[:USES]->(i:Ingredient {study_food: true})
             WITH d, COUNT(DISTINCT i) AS StudyFriendlyIngredients
-            RETURN d.name AS Dish, StudyFriendlyIngredients
-            ORDER BY StudyFriendlyIngredients DESC
+            MATCH (d)<-[:HAS_DISH]-(c:Cuisine)
+            RETURN d.name AS Dish, c.name AS Cuisine, StudyFriendlyIngredients
+            ORDER BY StudyFriendlyIngredients DESC, Dish ASC
             LIMIT 10
             """
-            df_top_dishes = pd.DataFrame(run_query(q_top_dishes, {"cuisine": selected_cuisine}))
+            df_dish = pd.DataFrame(run_query(q_dishes))
             
-            if not df_top_dishes.empty:
-                bar_colors = px.colors.qualitative.Vivid + px.colors.qualitative.Pastel + px.colors.qualitative.Bold
-                fig = px.bar(
-                    df_top_dishes,
-                    x="Dish",
-                    y="StudyFriendlyIngredients",
-                    color="Dish",
-                    title=f"Top Study-Boosting Dishes in {selected_cuisine.capitalize()}",
-                    color_discrete_sequence=bar_colors[:len(df_top_dishes)]
-                )
-                fig.update_layout(
-                    margin=dict(t=10, b=50, l=50, r=20),
-                    plot_bgcolor="#0e1117",
-                    paper_bgcolor="#0e1117",
-                    font_color="white",
-                    xaxis_title="Dish",
-                    yaxis_title="Number of Study Ingredients",
-                    showlegend=False,
-                    title=""
-                )
-                fig.update_xaxes(tickangle=-30)
-                st.plotly_chart(fig, use_container_width=True)
+            if not df_dish.empty:
+                st.table(df_dish)
             else:
-                st.info(f"No dishes with study-boosting ingredients found for {selected_cuisine}.")
+                st.info("No dish data found.")
+            
+            st.markdown("---")
             
             st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
@@ -668,6 +650,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
