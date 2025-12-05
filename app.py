@@ -607,6 +607,43 @@ elif page == "📊 Map of Flavors Dashboard":
             else:
                 st.info("No network connections found for this cuisine.")
 
+            #  Top Study-Boosting Dishes in Selected Cuisine
+            st.subheader("🍱 Top Study-Boosting Dishes in Selected Cuisine")
+            
+            q_top_dishes = """
+            MATCH (c:Cuisine)-[:HAS_DISH]->(d:Dish)-[:USES]->(i:Ingredient)
+            WHERE i.study_food = true 
+              AND toLower(c.name) = toLower($cuisine)
+            WITH d, COUNT(DISTINCT i) AS StudyFriendlyIngredients
+            RETURN d.name AS Dish, StudyFriendlyIngredients
+            ORDER BY StudyFriendlyIngredients DESC
+            LIMIT 10
+            """
+            df_top_dishes = pd.DataFrame(run_query(q_top_dishes, {"cuisine": selected_cuisine}))
+            
+            if not df_top_dishes.empty:
+                # Wrap long dish names so they fit mobile layout
+                def wrap_every_n_words(s, n=3):
+                    words = (s or "").split()
+                    return "\n".join([" ".join(words[i:i+n]) for i in range(0, len(words), n)])
+            
+                df_top_dishes["Dish"] = df_top_dishes["Dish"].apply(lambda x: wrap_every_n_words(x, 3))
+            
+                # Allow wrapping in Streamlit table
+                st.markdown("""
+                <style>
+                  div[data-testid="stDataFrame"] td, 
+                  div[data-testid="stDataFrame"] th {
+                      white-space: pre-wrap !important;
+                      line-height: 1.25 !important;
+                  }
+                </style>
+                """, unsafe_allow_html=True)
+            
+                st.dataframe(df_top_dishes, use_container_width=True, hide_index=True)
+            else:
+                st.info("No dishes with study-boosting ingredients found for this cuisine.")
+            
             st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
     # 🧠 FULL NEODASH DASHBOARD (DESKTOP)
@@ -629,6 +666,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
