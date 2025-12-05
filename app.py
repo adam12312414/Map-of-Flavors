@@ -607,7 +607,7 @@ elif page == "📊 Map of Flavors Dashboard":
             else:
                 st.info("No network connections found for this cuisine.")
 
-            #  Top Study-Boosting Dishes in Selected Cuisine
+            # 🍱 Top Study-Boosting Dishes in Selected Cuisine
             st.subheader("🍱 Top Study-Boosting Dishes in Selected Cuisine")
             
             q_top_dishes = """
@@ -622,27 +622,29 @@ elif page == "📊 Map of Flavors Dashboard":
             df_top_dishes = pd.DataFrame(run_query(q_top_dishes, {"cuisine": selected_cuisine}))
             
             if not df_top_dishes.empty:
-                # Wrap long dish names so they fit mobile layout
-                def wrap_every_n_words(s, n=3):
-                    words = (s or "").split()
-                    return "\n".join([" ".join(words[i:i+n]) for i in range(0, len(words), n)])
-            
-                df_top_dishes["Dish"] = df_top_dishes["Dish"].apply(lambda x: wrap_every_n_words(x, 3))
-            
-                # Allow wrapping in Streamlit table
-                st.markdown("""
-                <style>
-                  div[data-testid="stDataFrame"] td, 
-                  div[data-testid="stDataFrame"] th {
-                      white-space: pre-wrap !important;
-                      line-height: 1.25 !important;
-                  }
-                </style>
-                """, unsafe_allow_html=True)
-            
-                st.dataframe(df_top_dishes, use_container_width=True, hide_index=True)
+                bar_colors = px.colors.qualitative.Vivid + px.colors.qualitative.Pastel + px.colors.qualitative.Bold
+                fig = px.bar(
+                    df_top_dishes,
+                    x="Dish",
+                    y="StudyFriendlyIngredients",
+                    color="Dish",
+                    title=f"Top Study-Boosting Dishes in {selected_cuisine.capitalize()}",
+                    color_discrete_sequence=bar_colors[:len(df_top_dishes)]
+                )
+                fig.update_layout(
+                    margin=dict(t=10, b=50, l=50, r=20),
+                    plot_bgcolor="#0e1117",
+                    paper_bgcolor="#0e1117",
+                    font_color="white",
+                    xaxis_title="Dish",
+                    yaxis_title="Number of Study Ingredients",
+                    showlegend=False,
+                    title=""
+                )
+                fig.update_xaxes(tickangle=-30)
+                st.plotly_chart(fig, use_container_width=True)
             else:
-                st.info("No dishes with study-boosting ingredients found for this cuisine.")
+                st.info(f"No dishes with study-boosting ingredients found for {selected_cuisine}.")
             
             st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
@@ -666,6 +668,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
