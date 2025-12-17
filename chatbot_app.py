@@ -358,6 +358,69 @@ def main():
     user_question = st.text_input("Ask a question here:")
     if question is None and user_question: question = user_question
 
+    # TP CUISINE LOCATION INTERCEPT
+    def find_tp_cuisine_hits(text):
+        text = text.lower()
+        cuisine_keywords = {
+            "chinese": ["chinese", "chicken rice", "ban mian", "mala", "bee hoon", "koka"],
+            "japanese": ["japanese", "donburi", "rice bowl"],
+            "italian": ["italian", "pasta"],
+            "thai": ["thai", "tom yum"],
+            "korean": ["korean"],
+            "indian": ["indian", "briyani", "biryani", "prata"],
+        }
+        hits = []
+        for cuisine, words in cuisine_keywords.items():
+            for w in words:
+                if w in text:
+                    hits.append(cuisine)
+                    break
+        return list(dict.fromkeys(hits))
+    
+    
+    TP_CUISINE_LOCATIONS = {
+        "chinese": [
+            "🍗 Chicken Rice — The Flavours (BLK 4, SoIIT, Level 2)",
+            "🍜 Ban Mian & Fish Soup — The Flavours (BLK 4, SoIIT, Level 2)",
+            "🍛 A Tangerine Wok — Sprout Canteen (BLK 1A, HSS, Level 2)",
+            "🍗 Chicken Rice — The Business Park (BLK 26, Business, Level 1)",
+            "🥘 Mini Wok — The Business Park (BLK 26, Business, Level 1)",
+            "🍜 Koka Noodles — The Business Park (BLK 26, Business, Level 1)",
+            "🍗 Roasted Delight — Short Circuit (BLK 17, Engineering, Level 1)",
+            "🍜 Ban Mian & Fish Soup — Short Circuit (BLK 17, Engineering, Level 1)",
+            "🍚 Mixed Veg Rice & Bee Hoon — Breadboard (BLK 25, Engineering, Level 1)",
+            "🍗 Chicken Rice — Breadboard (BLK 25, Engineering, Level 1)",
+        ],
+        "japanese": [
+            "🍱 Japanese Rice Bowl — The Flavours (BLK 4, SoIIT, Level 2)",
+            "🍣 Japanese — The Designer Pad (BLK 28, Design, Level 1)",
+        ],
+        "italian": [
+            "🍝 Italian Cuisine — The Flavours (BLK 4, SoIIT, Level 2)",
+        ],
+        "thai": [
+            "🍲 Thai — The Business Park (BLK 26, Business, Level 1)",
+            "🔥 Thai Cuisine — Breadboard (BLK 25, Engineering, Level 1)",
+        ],
+        "korean": [
+            "🍗 Fried Chicken — The Business Park (BLK 26, Business, Level 1)",
+            "🍱 Korean — Short Circuit (BLK 17, Engineering, Level 1)",
+            "🍱 Korean Cuisine — Breadboard (BLK 25, Engineering, Level 1)",
+        ],
+        "indian": [
+            "🍛 Indian Muslim — The Business Park (BLK 26, Business, Level 1)",
+            "🍛 Indian Cuisine — Breadboard (BLK 25, Engineering, Level 1)",
+        ],
+    }
+    
+    if question and not question.strip().startswith("{"):
+        cuisine_hits = find_tp_cuisine_hits(question)
+        if cuisine_hits:
+            c = cuisine_hits[0]
+            st.info(f"💡 Did you know? We have **{c.title()}** cuisine at TP:")
+            for loc in TP_CUISINE_LOCATIONS.get(c, []):
+                st.markdown(f"- {loc}")
+
     # Main Logic
     if question:
         # 1. If the question comes from button JSON, skip GPT
@@ -518,6 +581,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
