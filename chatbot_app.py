@@ -424,10 +424,8 @@ def main():
     
             tp_hint_text = f"""
             <br><br>
-            <hr style="border:1px solid rgba(255,255,255,0.35);">
-            <br>
             💡 <b>Did you know?</b> We have <b>{c.title()}</b> cuisine at TP:
-            <ul style="margin:10px 0 0 20px;">
+            <ul style="margin:8px 0 0 20px;">
                 {items}
             </ul>
             """
@@ -596,6 +594,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
