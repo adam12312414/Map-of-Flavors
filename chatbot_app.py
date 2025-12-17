@@ -300,7 +300,7 @@ def main():
     st.markdown("""
     <div style="margin-left:-60px;">
     <h1 style="font-size:55px; white-space:nowrap; margin:0;">
-        👨‍🍳🍪 lololololCook-E’s Map of Flavors 🌍✨
+        👨‍🍳🍪 Cook-E’s Map of Flavors 🌍✨
     </h1>
     </div>
     <p style='font-size:22px; text-align:center; color:#FFD166;'>Where data meets deliciousness! 🍪📊</p>
@@ -581,6 +581,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
