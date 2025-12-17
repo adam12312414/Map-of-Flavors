@@ -414,14 +414,20 @@ def main():
         ],
     }
     
-    if question and not question.strip().startswith("{"):
+    tp_hint_text = ""
+    if isinstance(question, str) and question.strip() and not question.strip().startswith("{"):
         cuisine_hits = find_tp_cuisine_hits(question)
         if cuisine_hits:
             c = cuisine_hits[0]
-            with hint_box.container():
-                st.info(f"💡 Did you know? We have **{c.title()}** cuisine at TP:")
-                for loc in TP_CUISINE_LOCATIONS.get(c, []):
-                    st.markdown(f"- {loc}")
+            items = "".join([f"<li>{loc}</li>" for loc in TP_CUISINE_LOCATIONS.get(c, [])])
+            tp_hint_text = f"""
+            <br><br>
+            <div style="text-align:left;font-size:18px;background:rgba(255,255,255,0.12);
+            padding:14px;border-radius:12px;">
+              💡 <b>Did you know?</b> We have <b>{c.title()}</b> cuisine at TP:
+              <ul style="margin:8px 0 0 18px;">{items}</ul>
+            </div>
+            """
 
     # Main Logic
     if question:
@@ -538,7 +544,11 @@ def main():
                 <div style="background:linear-gradient(135deg,#00b4d8,#0077b6);padding:30px;
                 border-radius:18px;color:white;font-size:22px;line-height:1.6;
                 font-weight:600;text-align:center;box-shadow:0 0 25px rgba(0,183,255,0.6);
-                margin-top:15px;">🍪 <b>Cook-E says:</b> {insight}</div>
+                margin-top:15px;">
+                🍪 <b>Cook-E says:</b><br><br>
+                {insight}
+                {tp_hint_text}
+                </div>
                 """, unsafe_allow_html=True)
 
             # CHART OUTPUT
@@ -583,6 +593,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
