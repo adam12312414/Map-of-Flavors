@@ -356,6 +356,7 @@ def main():
         })
 
     user_question = st.text_input("Ask a question here:")
+    hint_box = st.empty() 
     if question is None and user_question: question = user_question
 
     # TP CUISINE LOCATION INTERCEPT
@@ -417,9 +418,10 @@ def main():
         cuisine_hits = find_tp_cuisine_hits(question)
         if cuisine_hits:
             c = cuisine_hits[0]
-            st.info(f"💡 Did you know? We have **{c.title()}** cuisine at TP:")
-            for loc in TP_CUISINE_LOCATIONS.get(c, []):
-                st.markdown(f"- {loc}")
+            with hint_box.container():
+                st.info(f"💡 Did you know? We have **{c.title()}** cuisine at TP:")
+                for loc in TP_CUISINE_LOCATIONS.get(c, []):
+                    st.markdown(f"- {loc}")
 
     # Main Logic
     if question:
@@ -581,6 +583,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
