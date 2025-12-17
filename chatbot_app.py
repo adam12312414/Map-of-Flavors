@@ -420,15 +420,10 @@ def main():
         cuisine_hits = find_tp_cuisine_hits(question)
         if cuisine_hits:
             c = cuisine_hits[0]
-            items = "".join([f"<li>{loc}</li>" for loc in TP_CUISINE_LOCATIONS.get(c, [])])
-    
-            tp_hint_text = f"""
-            <br><br>
-            💡 <b>Did you know?</b> We have <b>{c.title()}</b> cuisine at TP:
-            <ul style="margin:8px 0 0 20px;">
-                {items}
-            </ul>
-            """
+            locations = "<br>".join([
+                f"🍛 {loc}" for loc in TP_CUISINE_LOCATIONS.get(c, [])
+            ])
+            tp_hint_text = f"<br><br>💡 Did you know? We have {c.title()} cuisine at TP:<br>{locations}"
 
     # Main Logic
     if question:
@@ -594,6 +589,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
