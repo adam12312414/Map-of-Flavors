@@ -415,18 +415,21 @@ def main():
     }
     
     tp_hint_text = ""
+
     if isinstance(question, str) and question.strip() and not question.strip().startswith("{"):
         cuisine_hits = find_tp_cuisine_hits(question)
         if cuisine_hits:
             c = cuisine_hits[0]
             items = "".join([f"<li>{loc}</li>" for loc in TP_CUISINE_LOCATIONS.get(c, [])])
+    
             tp_hint_text = f"""
             <br><br>
-            <div style="text-align:left;font-size:18px;background:rgba(255,255,255,0.12);
-            padding:14px;border-radius:12px;">
-              💡 <b>Did you know?</b> We have <b>{c.title()}</b> cuisine at TP:
-              <ul style="margin:8px 0 0 18px;">{items}</ul>
-            </div>
+            <hr style="border:1px solid rgba(255,255,255,0.35);">
+            <br>
+            💡 <b>Did you know?</b> We have <b>{c.title()}</b> cuisine at TP:
+            <ul style="margin:10px 0 0 20px;">
+                {items}
+            </ul>
             """
 
     # Main Logic
@@ -593,6 +596,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
