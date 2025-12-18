@@ -381,8 +381,8 @@ def main():
     
     TP_CUISINE_LOCATIONS = {
         "chinese": [
-            "🍗 Chicken Rice — The Flavours (BLK 4, SoIIT, Level 2)",
-            "🍜 Ban Mian & Fish Soup — The Flavours (BLK 4, SoIIT, Level 2)",
+            "🍗 Chicken Rice — The Flavours (BLK 4, IIT, Level 2)",
+            "🍜 Ban Mian & Fish Soup — The Flavours (BLK 4, IIT, Level 2)",
             "🍛 A Tangerine Wok — Sprout Canteen (BLK 1A, HSS, Level 2)",
             "🍗 Chicken Rice — The Business Park (BLK 26, Business, Level 1)",
             "🥘 Mini Wok — The Business Park (BLK 26, Business, Level 1)",
@@ -393,11 +393,11 @@ def main():
             "🍗 Chicken Rice — Breadboard (BLK 25, Engineering, Level 1)",
         ],
         "japanese": [
-            "🍱 Japanese Rice Bowl — The Flavours (BLK 4, SoIIT, Level 2)",
+            "🍱 Japanese Rice Bowl — The Flavours (BLK 4, IIT, Level 2)",
             "🍣 Japanese — The Designer Pad (BLK 28, Design, Level 1)",
         ],
         "italian": [
-            "🍝 Italian Cuisine — The Flavours (BLK 4, SoIIT, Level 2)",
+            "🍝 Italian Cuisine — The Flavours (BLK 4, IIT, Level 2)",
         ],
         "thai": [
             "🍲 Thai — The Business Park (BLK 26, Business, Level 1)",
@@ -589,6 +589,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
