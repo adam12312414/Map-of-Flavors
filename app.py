@@ -628,6 +628,52 @@ elif page == "📊 Map of Flavors Dashboard":
             else:
                 st.info("No dish data found.")
 
+            # 📍 Where to find this cuisine at TP
+            st.subheader("🍜 Hungry? Find This Cuisine at TP")
+            
+            c = selected_cuisine.lower()
+            
+            tp_locations = {
+                "japanese": [
+                    "🍱 Japanese Rice Bowl — The Flavours (BLK 4, IIT, Level 2)",
+                    "🍣 Japanese — The Designer Pad (BLK 28, Design, Level 1)",
+                ],
+                "chinese": [
+                    "🍗 Chicken Rice — The Flavours (BLK 4, IIT, Level 2)",
+                    "🍜 Ban Mian & Fish Soup — The Flavours (BLK 4, SoIIT, Level 2)",
+                    "🥘 A Tangerine Wok — Sprout Canteen (BLK 1A, HSS, Level 2)",
+                    "🍗 Chicken Rice — The Business Park (BLK 26, Business, Level 1)",
+                    "🍳 Mini Wok — The Business Park (BLK 26, Business, Level 1)",
+                    "🍜 Koka Noodles — The Business Park (BLK 26, Business, Level 1)",
+                    "🦆 Roasted Delight — Short Circuit (BLK 17, Engineering, Level 1)",
+                    "🌶️ Mala Hot Pot — Short Circuit (BLK 17, Engineering, Level 1)",
+                    "🍚 Mixed Veg Rice & Bee Hoon — Breadboard (BLK 25, Engineering, Level 1)",
+                    "🍗 Chicken Rice — Breadboard (BLK 25, Engineering, Level 1)",
+                ],
+                "indian": [
+                    "🍛 Indian Muslim — The Business Park (BLK 26, Business, Level 1)",
+                    "🥘 Indian Cuisine — Breadboard (BLK 25, Engineering, Level 1)",
+                ],
+                "korean": [
+                    "🍗 Fried Chicken — The Business Park (BLK 26, Business, Level 1)",
+                    "🍲 Korean — Short Circuit (BLK 17, Engineering, Level 1)",
+                    "🥟 Korean Cuisine — Breadboard (BLK 25, Engineering, Level 1)",
+                ],
+                "thai": [
+                    "🍲 Thai — The Business Park (BLK 26, Business, Level 1)",
+                    "🍜 Thai Cuisine — Breadboard (BLK 25, Engineering, Level 1)",
+                ],
+                "italian": [
+                    "🍝 Italian Cuisine — The Flavours (BLK 4, IIT, Level 2)",
+                ],
+            }
+            
+            if c in tp_locations:
+                for loc in tp_locations[c]:
+                    st.markdown(f"- {loc}")
+            else:
+                st.info("ℹ️ This cuisine is not currently available in TP canteens.")
+
             st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
     # 🧠 FULL NEODASH DASHBOARD (DESKTOP)
@@ -650,6 +696,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
