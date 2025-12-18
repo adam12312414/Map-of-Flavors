@@ -640,7 +640,7 @@ elif page == "📊 Map of Flavors Dashboard":
                 ],
                 "chinese": [
                     "🍗 Chicken Rice — The Flavours (BLK 4, IIT, Level 2)",
-                    "🍜 Ban Mian & Fish Soup — The Flavours (BLK 4, SoIIT, Level 2)",
+                    "🍜 Ban Mian & Fish Soup — The Flavours (BLK 4, IIT, Level 2)",
                     "🥘 A Tangerine Wok — Sprout Canteen (BLK 1A, HSS, Level 2)",
                     "🍗 Chicken Rice — The Business Park (BLK 26, Business, Level 1)",
                     "🍳 Mini Wok — The Business Park (BLK 26, Business, Level 1)",
@@ -696,6 +696,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
