@@ -421,7 +421,7 @@ def main():
         if cuisine_hits:
             c = cuisine_hits[0]
             locations = "<br>".join([
-                f"🍛 {loc}" for loc in TP_CUISINE_LOCATIONS.get(c, [])
+                f" {loc}" for loc in TP_CUISINE_LOCATIONS.get(c, [])
             ])
             tp_hint_text = f"<br><br>💡 Did you know? We have {c.title()} cuisine at TP:<br>{locations}"
 
@@ -589,6 +589,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
