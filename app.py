@@ -674,6 +674,90 @@ elif page == "📊 Map of Flavors Dashboard":
             else:
                 st.info("ℹ️ This cuisine is not currently available in TP canteens.")
 
+            # 🍽️ Smart dish recommendation (Cuisine + picked ingredients)
+            st.subheader("🍽️ Recommendations Based on Your Selected Cuisine & Ingredients")
+            st.caption("Tip: Pick 1–3 ingredients above, then choose a cuisine to get better matches.")
+            
+            q_reco = """
+            WITH toLower($cuisine) AS cuisine,
+                 coalesce($ingredients, []) AS ingParam
+            
+            WITH cuisine,
+                 [x IN ingParam | toLower(toString(x))] AS picked,
+                 size(ingParam) AS pickedCount
+            
+            OPTIONAL MATCH (c:Cuisine)
+            WHERE toLower(c.name) = cuisine
+            OPTIONAL MATCH (c)-[:HAS_DISH]->(d:Dish)
+            
+            OPTIONAL MATCH (d)-[:USES]->(i:Ingredient)
+            WITH cuisine, picked, pickedCount, d,
+                 collect(DISTINCT toLower(i.name)) AS dishIngs
+            
+            WITH cuisine, picked, pickedCount, d,
+                 [x IN picked WHERE x IN dishIngs] AS matched,
+                 size([x IN picked WHERE x IN dishIngs]) AS matchScore
+            
+            OPTIONAL MATCH (d)-[:USES]->(sf:Ingredient {study_food:true})
+            WITH cuisine, picked, pickedCount, d, matched, matchScore,
+                 count(DISTINCT sf) AS studyBoost,
+                 (matchScore * 10 + count(DISTINCT sf)) AS rankScore
+            
+            WITH cuisine, picked, pickedCount,
+                 collect({
+                   dish: coalesce(d.name, "NO_DISH"),
+                   matchScore: matchScore,
+                   matched: matched,
+                   studyBoost: studyBoost,
+                   rankScore: rankScore
+                 }) AS rows
+            
+            UNWIND
+            CASE
+              WHEN pickedCount > 0
+               AND size([r IN rows WHERE r.matchScore > 0]) = 0
+              THEN
+                [{
+                  dish: "⚠️ No matching dishes found",
+                  matchScore: 0,
+                  matched: ["Please change or add ingredients — none match " + cuisine + " dishes in our dataset."],
+                  studyBoost: 0,
+                  rankScore: 0
+                }]
+              ELSE
+                [r IN rows WHERE r.matchScore > 0]
+            END AS r
+            
+            RETURN
+            r.dish AS RecommendedDish,
+            r.matchScore AS MatchedPickedIngredients,
+            reduce(
+              s = "",
+              x IN r.matched |
+              s + CASE WHEN s = "" THEN "" ELSE ", " END + x
+            ) AS MatchedIngredients,
+            r.studyBoost AS StudyFriendlyIngredientCount,
+            CASE
+              WHEN r.dish STARTS WITH "⚠️" THEN "⚠️"
+              ELSE "✅"
+            END AS Note
+            ORDER BY r.rankScore DESC
+            LIMIT 5
+            """
+            
+            # ✅ Run only when cuisine is chosen (ingredients can be empty or not)
+            df_reco = pd.DataFrame(run_query(q_reco, {
+                "cuisine": selected_cuisine,
+                "ingredients": selected_ingredients
+            }))
+            
+            if not df_reco.empty:
+                df_reco = df_reco[["Note", "RecommendedDish", "MatchedPickedIngredients", "MatchedIngredients", "StudyFriendlyIngredientCount"]]
+                st.table(df_reco)
+            else:
+                st.info("No recommendation data found.")
+
+
             st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
     # 🧠 FULL NEODASH DASHBOARD (DESKTOP)
@@ -696,6 +780,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
