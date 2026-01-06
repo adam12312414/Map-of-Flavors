@@ -6,7 +6,6 @@ import plotly.express as px
 from neo4j import GraphDatabase
 from pyvis.network import Network
 import streamlit.components.v1 as components
-st.write("🚨 DEPLOY CHECK 🚨") 
 
 # Neo4j Connection for Dashboard
 NEO4J_URI = st.secrets["NEO4J_URI"]
@@ -680,8 +679,6 @@ elif page == "📊 Map of Flavors Dashboard":
                 st.info("ℹ️ This cuisine is not currently available in TP canteens.")
 
             # 🍽️ Smart dish recommendation (Cuisine + picked ingredients)
-            st.warning("✅ DEBUG: reached recommendation section")
-
             st.subheader("🍛 Recommendations Based on Your Selected Cuisine & Ingredients")
             st.caption("Tip: Pick 1–3 ingredients above, then choose a cuisine to get better matches.")
             
@@ -807,6 +804,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
