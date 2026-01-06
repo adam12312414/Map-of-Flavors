@@ -24,7 +24,7 @@ st.set_page_config(page_title="Map of Flavors", page_icon="🍳", layout="wide")
 # Sidebar Navigation
 page = st.sidebar.radio(
     "🍽️ Choose a section",
-    ["🏠 Home", "🎯 What Cuisine Are You? Personality Quiz", "📊 Map of Flavors Dashboard", "🤖 Chatbot (Cook-E)"]
+    ["🏠 Home", "🎯 What Cuisine Are You? Personality Quiz", "📊 Map of Flavors Dashboard", "🤖 lolzChatbot (Cook-E)"]
 )
 
 # PAGE 1: HOME
@@ -806,6 +806,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
