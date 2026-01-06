@@ -6,6 +6,7 @@ import plotly.express as px
 from neo4j import GraphDatabase
 from pyvis.network import Network
 import streamlit.components.v1 as components
+st.write("🚨 DEPLOY CHECK 🚨") 
 
 # Neo4j Connection for Dashboard
 NEO4J_URI = st.secrets["NEO4J_URI"]
@@ -806,6 +807,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
