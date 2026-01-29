@@ -14,7 +14,7 @@ def main():
 
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
 
-    # === OpenAI Setup ===
+    # OpenAI Setup
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
     def run_query(cypher):
@@ -589,6 +589,7 @@ def main():
 
         except Exception as e:
             st.error(f"Query Error: {e}")
+
 
 
 
