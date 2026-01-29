@@ -69,7 +69,7 @@ elif page == "📊 Map of Flavors Dashboard":
         help="Use the simple view on phones. Use the full NeoDash view on laptops/desktops."
     )
 
-    # 📱 SIMPLE STREAMLIT DASHBOARD (MOBILE-FRIENDLY)
+    # SIMPLE STREAMLIT DASHBOARD (MOBILE-FRIENDLY)
     if view_mode == "📱 Mobile-friendly dashboard":
         # 🌍 Global Dataset Summary
         st.subheader("🌍 Global Dataset Summary")
@@ -100,7 +100,7 @@ elif page == "📊 Map of Flavors Dashboard":
 
         st.markdown("---")
 
-        # 🧠 Top 10 Ingredients, Regions, Cuisines, Dishes
+        # Top 10 Ingredients, Regions, Cuisines, Dishes
         st.subheader("🧠🍳Top 10 Ingredients That Help You Study Better")
 
         q_ingredients = """
@@ -141,7 +141,7 @@ elif page == "📊 Map of Flavors Dashboard":
         else:
             st.info("No study ingredients found in the data.")
 
-        # 🌍 Regions with most study ingredients
+        # Regions with most study ingredients
         st.subheader("🗺️🥬 Regions Full of Focus-Enhancing Dishes!")
         q_regions = """
         MATCH (r:Region)-[:HAS_CUISINE]->(c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i:Ingredient)
@@ -167,7 +167,7 @@ elif page == "📊 Map of Flavors Dashboard":
                 pull=[0.03] * len(df_reg)  
             )
         
-            # 🖤 Match NeoDash dark theme
+            # Match NeoDash dark theme
             fig.update_layout(
                 margin=dict(t=10, b=50, l=50, r=20),
                 plot_bgcolor="#0e1117",
@@ -184,7 +184,7 @@ elif page == "📊 Map of Flavors Dashboard":
         else:
             st.info("No region data found.")
 
-        # 🍜 Cuisines packed with study foods
+        # Cuisines packed with study foods
         st.subheader("🍱🌍 Cuisines Packed With Brain-Boosting Foods!")
         q_cuisines = """
         MATCH (c:Cuisine)-[:HAS_DISH]->(:Dish)-[:USES]->(i:Ingredient)
@@ -195,7 +195,7 @@ elif page == "📊 Map of Flavors Dashboard":
         """
         df_cui = pd.DataFrame(run_query(q_cuisines))
         if not df_cui.empty:
-            # 🎨 Custom color palette
+            # Custom color palette
             bar_colors = px.colors.qualitative.Vivid + px.colors.qualitative.Pastel + px.colors.qualitative.Bold
         
             # Colorful bar chart with no legend
@@ -224,7 +224,7 @@ elif page == "📊 Map of Flavors Dashboard":
         else:
             st.info("No cuisine data found.")
 
-        # 🍽️ Top dishes packed with study ingredients
+        # Top dishes packed with study ingredients
         st.subheader("🧠🥗 Top Dishes Packed With Study-Boosting Ingredients")
         q_dishes = """
         MATCH (d:Dish)-[:USES]->(i:Ingredient {study_food: true})
@@ -293,7 +293,7 @@ elif page == "📊 Map of Flavors Dashboard":
 
         st.markdown("---")
 
-        # 🧂 INGREDIENT SECTION 
+        # INGREDIENT SECTION 
         st.subheader("Pick Your Fav Ingredients 💥 🧂")
         st.caption("Choose your favourite ingredients:")
 
@@ -316,7 +316,7 @@ elif page == "📊 Map of Flavors Dashboard":
             selected_ingredients = []
 
         if selected_ingredients:
-            # ⭐📊 Ingredient Summary Dashboard
+            # Ingredient Summary Dashboard
             st.subheader("⭐📊 Ingredient Summary Dashboard")
 
             q_ing_summary = """
@@ -356,28 +356,28 @@ elif page == "📊 Map of Flavors Dashboard":
             if not df_ing_stats.empty:
                 row = df_ing_stats.iloc[0]
 
-                # ⭐ Replace table with KPI cards
+                #  Replace table with KPI cards
                 k1, k2, k3 = st.columns(3)
 
-                # 🌎 Total cuisines using your selected ingredients
+                #  Total cuisines using your selected ingredients
                 k1.metric(
                     label="Total Cuisines",
                     value=f"🌎 {row['Total_Cuisines']}"
                 )
 
-                # 🍽️ Total dishes using your ingredients
+                # Total dishes using your ingredients
                 k2.metric(
                     label="Total Dishes",
                     value=f"🍽️ {row['Total_Dishes']}"
                 )
 
-                # 🧠 Percent study-food ingredients among selected
+                # Percent study-food ingredients among selected
                 k3.metric(
                     label="Study-Food %",
                     value=f"📊 {row['Percent_Study_Ingredients']}%"
                 )
 
-            # 😋🔥 Which Cuisines Love Your Ingredients?
+            # Which Cuisines Love Your Ingredients?
             st.subheader("😋🔥 Which Cuisines Love Your Ingredients?")
             q_ing_cui = """
             WITH $ingredients AS ingredients
@@ -418,7 +418,7 @@ elif page == "📊 Map of Flavors Dashboard":
             else:
                 st.info("No cuisine data found for your selected ingredients.")
 
-            # 🕸️ Ingredient Spider-Web (network graph)
+            # Ingredient Spider-Web (network graph)
             st.subheader("🕸️🍽️ Ingredient Spider-Web of Tasty Connections")
 
             q_net = """
@@ -461,7 +461,7 @@ elif page == "📊 Map of Flavors Dashboard":
 
         st.markdown("---")
         
-        # 😋 CUISINE SECTION (matches NeoDash order)
+        # CUISINE SECTION (matches NeoDash order)
         st.subheader("Where Shall We Eat Today? 😋")
 
         cuisine_list_q = """
@@ -478,7 +478,7 @@ elif page == "📊 Map of Flavors Dashboard":
         )
 
         if selected_cuisine != "(pick a cuisine)":
-            # 🍽️ Cuisine Summary Dashboard
+            # Cuisine Summary Dashboard
             st.subheader("🍽️ Cuisine Summary Dashboard")
             q_cui_kpi = """
             MATCH (c:Cuisine)
@@ -507,25 +507,25 @@ elif page == "📊 Map of Flavors Dashboard":
                 row = df_cui_kpi.iloc[0]
                 k1, k2, k3 = st.columns(3)
 
-                # 🧠 total study ingredients
+                # total study ingredients
                 k1.metric(
                     label="Total Study Ingredients",
                     value=f"🧠 {row['Total_Study_Ingredients']}"
                 )
 
-                # 🥗 total ingredients
+                # total ingredients
                 k2.metric(
                     label="Total Ingredients",
                     value=f"🥗 {row['Total_Ingredients']}"
                 )
 
-                # 📊 percent study ingredients
+                # percent study ingredients
                 k3.metric(
                     label="Percent Study Ingredients",
                     value=f"📊 {row['Percent_Study_Ingredients']}%"
                 )
 
-            # ⭐ Signature Flavors of Selected Cuisine
+            # Signature Flavors of Selected Cuisine
             st.subheader("⭐ Signature Flavors of Selected Cuisine")
             q_cui_ing = """
             MATCH (c:Cuisine)
@@ -549,7 +549,7 @@ elif page == "📊 Map of Flavors Dashboard":
                     color_discrete_sequence=bar_colors[:len(df_cui_ing)]
                 )
             
-                # 🖤 Dark theme styling
+                # Dark theme styling
                 fig.update_layout(
                     margin=dict(t=10, b=50, l=50, r=20),
                     plot_bgcolor="#0e1117",
@@ -565,7 +565,7 @@ elif page == "📊 Map of Flavors Dashboard":
             else:
                 st.info("No signature flavors found for this cuisine.")
 
-            # 🧬 Flavor Network - Click to explore! (Cuisine network)
+            # Flavor Network - Click to explore! (Cuisine network)
             st.subheader("🧬 Flavor Network - Click to explore!")
 
             q_cui_net = """
@@ -612,7 +612,7 @@ elif page == "📊 Map of Flavors Dashboard":
                 st.info("No network connections found for this cuisine.")
 
 
-            # 🍱 Top Study-Boosting Dishes in Selected Cuisine
+            # Top Study-Boosting Dishes in Selected Cuisine
             st.subheader("🍱 Top Study-Boosting Dishes in Selected Cuisine")
             
             q_dishes = """
@@ -632,7 +632,7 @@ elif page == "📊 Map of Flavors Dashboard":
             else:
                 st.info("No dish data found.")
 
-            # 📍 Where to find this cuisine at TP
+            # Where to find this cuisine at TP
             st.subheader("🍜 Hungry? Find This Cuisine at TP")
             
             c = selected_cuisine.lower()
@@ -678,7 +678,7 @@ elif page == "📊 Map of Flavors Dashboard":
             else:
                 st.info("ℹ️ This cuisine is not currently available in TP canteens.")
 
-            # 🍽️ Smart dish recommendation (Cuisine + picked ingredients)
+            # Smart dish recommendation (Cuisine + picked ingredients)
             st.subheader("🍛 Recommendations Based on Your Selected Cuisine & Ingredients")
             st.caption("Tip: Pick 1–3 ingredients above, then choose a cuisine to get better matches.")
             
@@ -784,7 +784,7 @@ elif page == "📊 Map of Flavors Dashboard":
 
             st.info("This view is optimised for mobile phones. Use the NeoDash view for full graph visuals on desktop. 💻")
 
-    # 🧠 FULL NEODASH DASHBOARD (DESKTOP)
+    # FULL NEODASH DASHBOARD (DESKTOP)
     else:
         st.markdown("""
         Explore the full interactive NeoDash dashboard with network graphs and filters.  
@@ -804,6 +804,7 @@ elif page == "📊 Map of Flavors Dashboard":
 # PAGE 4: CHATBOT
 elif page == "🤖 Chatbot (Cook-E)":
     chatbot.main()
+
 
 
 
